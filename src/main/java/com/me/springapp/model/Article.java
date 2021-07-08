@@ -1,10 +1,14 @@
 package com.me.springapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "articles")
@@ -26,10 +30,19 @@ public class Article {
 
     private boolean active = false;
 
-    @OneToOne
+    private LocalDateTime dateCreated;
+
+    @ManyToOne
     @JsonIgnoreProperties({"email", "password", "active"})
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinTable(name = "articles_tags",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<ArticleTag> tags;
 
     public Article(String title, String excerpt, String content, boolean active, User user) {
         this.title = title;

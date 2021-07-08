@@ -1,6 +1,8 @@
 package com.me.springapp.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "roles", uniqueConstraints = {
@@ -14,6 +16,9 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private RoleEnum name;
+
+    @ManyToMany(mappedBy = "roles")
+    List<User> users;
 
     public Role() {
     }
