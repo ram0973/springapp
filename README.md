@@ -127,5 +127,8 @@ Authorization - Bearer token - взять из ответа который вы�
 ```
 GET http://localhost:8080/api/articles/active
 ```
+## Документация (Swagger)
+
+Api Docs: /v2/api-docs/
 
 ## Лицензия: MIT
