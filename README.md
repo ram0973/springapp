@@ -120,7 +120,7 @@ Body: RAW JSON
 Список пользователей (защищённое api):
 ```
 GET http://localhost:8080/api/users
-Autorization - Bearer token - взять из ответа который выдается при логине
+Authorization - Bearer token - взять из ответа который выдается при логине
 ```
 Список активных статей (открытое api):
 ```
