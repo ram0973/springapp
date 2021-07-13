@@ -64,11 +64,11 @@ public class DBSeedConfig {
             logger.info("Preloading " + articleRepository.save(
                     new Article("9 article", "Excerpt", "Content", true, bilbo)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("10", "Excerpt", "Content", true, bilbo)));
+                    new Article("10 article", "Excerpt", "Content", true, bilbo)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("11", "Excerpt", "Content", true, bilbo)));
+                    new Article("11 article", "Excerpt", "Content", true, bilbo)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("12", "Excerpt", "Content", true, bilbo)));
+                    new Article("12 article", "Excerpt", "Content", true, bilbo)));
         };
     }
 }
