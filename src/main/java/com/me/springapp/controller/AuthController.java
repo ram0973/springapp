@@ -11,6 +11,7 @@ import com.me.springapp.security.payload.LoginRequest;
 import com.me.springapp.security.payload.MessageResponse;
 import com.me.springapp.security.payload.SignupRequest;
 import com.me.springapp.service.UserDetailsImpl;
+import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +105,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup-with-roles")
-    @PreAuthorize("hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerUserWithRoles(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity

@@ -35,14 +35,14 @@ public class DBSeedConfig {
             logger.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_MODERATOR)));
             logger.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_USER)));
 
-            User bilbo = new User("bilbo", "bilbo@baggins.com", passwordEncoder.encode("123"),
+            User bilbo = new User("bilbo", "bilbo@baggins.com", passwordEncoder.encode("123456"),
                     User.USER_ACTIVE);
             logger.info("Preloading " + userRepository.save(bilbo));
             logger.info("Preloading " + userRepository.save(
-                    new User("frodo", "frodo@baggins.com", passwordEncoder.encode("123"),
+                    new User("frodo", "frodo@baggins.com", passwordEncoder.encode("123456"),
                             User.USER_ACTIVE)));
             logger.info("Preloading " + userRepository.save(
-                    new User("gendalf", "gendalf@white.com", passwordEncoder.encode("123"),
+                    new User("gendalf", "gendalf@white.com", passwordEncoder.encode("123456"),
                             User.USER_ACTIVE)));
 
             logger.info("Preloading " + articleRepository.save(
