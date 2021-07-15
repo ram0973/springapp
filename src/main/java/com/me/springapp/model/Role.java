@@ -17,7 +17,9 @@ public class Role {
     @Column(length = 20)
     private RoleEnum name;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", cascade = {
+        CascadeType.MERGE
+    })
     List<User> users;
 
     public Role() {
@@ -41,5 +43,13 @@ public class Role {
 
     public void setName(RoleEnum name) {
         this.name = name;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

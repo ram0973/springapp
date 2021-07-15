@@ -23,6 +23,9 @@ public class ArticleTag {
         this.id = id;
     }
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
     private Set<Article> articles;
 }

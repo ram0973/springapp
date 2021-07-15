@@ -1,9 +1,6 @@
 package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.v3.oas.annotations.Hidden;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -50,23 +47,29 @@ public class User {
 
     private LocalDateTime dateCreated;
 
-    @OneToMany(mappedBy="user")
-    private Set<Article> articles;
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    private final Set<Article> articles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(
+        //fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.MERGE
+    })
     @JsonIgnore
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> roles = new HashSet<>();
 
     protected User() {
     }
 
-    public User(String username, String email, String password, boolean active) {
+    public User(String username, String email, String password, Set<Role> roles, boolean active) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.roles = roles;
         this.active = active;
     }
 

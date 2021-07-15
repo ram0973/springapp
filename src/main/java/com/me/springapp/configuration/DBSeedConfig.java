@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
+import java.util.HashSet;
+
 @Configuration
 public class DBSeedConfig {
     private static final Logger logger = LoggerFactory.getLogger(DBSeedConfig.class);
@@ -35,40 +38,42 @@ public class DBSeedConfig {
             logger.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_MODERATOR)));
             logger.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_USER)));
 
-            User bilbo = new User("bilbo", "bilbo@baggins.com", passwordEncoder.encode("123456"),
-                    User.USER_ACTIVE);
-            logger.info("Preloading " + userRepository.save(bilbo));
             logger.info("Preloading " + userRepository.save(
-                    new User("frodo", "frodo@baggins.com", passwordEncoder.encode("123456"),
-                            User.USER_ACTIVE)));
+                new User("bilbo", "bilbo@baggins.com", passwordEncoder.encode("666666"),
+                Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER).orElseThrow()), User.USER_ACTIVE)));
             logger.info("Preloading " + userRepository.save(
-                    new User("gendalf", "gendalf@white.com", passwordEncoder.encode("123456"),
-                            User.USER_ACTIVE)));
+                new User("frodo", "frodo@baggins.com", passwordEncoder.encode("666666"),
+                    Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER).orElseThrow()),
+                    User.USER_ACTIVE)));
+            User gendalf = new User("gendalf", "gendalf@white.com",
+                passwordEncoder.encode("666666"),
+                Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER).orElseThrow()), User.USER_ACTIVE);
+            logger.info("Preloading " + userRepository.save(gendalf));
 
             logger.info("Preloading " + articleRepository.save(
-                    new Article("1 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("1 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("2 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("2 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("3 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("3 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("4 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("4 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("5 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("5 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("6 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("6 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("7 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("7 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("8 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("8 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("9 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("9 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("10 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("10 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("11 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("11 article", "Excerpt", "Content", true, gendalf)));
             logger.info("Preloading " + articleRepository.save(
-                    new Article("12 article", "Excerpt", "Content", true, bilbo)));
+                    new Article("12 article", "Excerpt", "Content", true, gendalf)));
         };
     }
 }

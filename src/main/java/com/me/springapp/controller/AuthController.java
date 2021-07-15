@@ -11,7 +11,6 @@ import com.me.springapp.security.payload.LoginRequest;
 import com.me.springapp.security.payload.MessageResponse;
 import com.me.springapp.security.payload.SignupRequest;
 import com.me.springapp.service.UserDetailsImpl;
-import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +90,7 @@ public class AuthController {
             User user = new User(signUpRequest.getUsername(),
                     signUpRequest.getEmail(),
                     encoder.encode(signUpRequest.getPassword()),
+                    Collections.singleton(new Role(RoleEnum.ROLE_USER)),
                     User.USER_ACTIVE);
             Set<Role> roles = new HashSet<>();
             Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
@@ -105,7 +106,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup-with-roles")
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerUserWithRoles(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
@@ -120,11 +121,6 @@ public class AuthController {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()),
-                User.USER_ACTIVE);
-
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -154,7 +150,12 @@ public class AuthController {
             });
         }
 
-        user.setRoles(roles);
+        User user = new User(signUpRequest.getUsername(),
+            signUpRequest.getEmail(),
+            encoder.encode(signUpRequest.getPassword()),
+            roles,
+            User.USER_ACTIVE);
+
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

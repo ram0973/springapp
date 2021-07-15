@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<User> createUser(User user) {
         try {
             User _user = repository.save(new User(user.getUsername(), user.getEmail(), user.getPassword(),
-                    user.isActive()));
+                    user.getRoles(), user.isActive()));
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
