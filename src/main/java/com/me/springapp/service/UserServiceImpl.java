@@ -25,86 +25,56 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<List<User>> findAll() {
-        try {
-            List<User> users;
-            users = repository.findAll();
-            if (users.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                return new ResponseEntity<>(users, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        List<User> users;
+        users = repository.findAll();
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(users, HttpStatus.OK);
         }
     }
 
     @Override
     public ResponseEntity<User> findById(int id) {
-        try {
-            Optional<User> user = repository.findById(id);
-            return user.
-                    map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Optional<User> user = repository.findById(id);
+        return user
+            .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Override
     public ResponseEntity<User> createUser(User user) {
-        try {
-            User _user = repository.save(new User(user.getUsername(), user.getEmail(), user.getPassword(),
+        User savedUser = repository.save(new User(user.getUsername(), user.getEmail(), user.getPassword(),
                     user.getRoles(), user.isActive()));
-            return new ResponseEntity<>(_user, HttpStatus.CREATED);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<HttpStatus> deleteUser(int id) {
-        try {
-            repository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        repository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<User> updateUser(int id, User user) {
-        try {
-            Optional<User> userOptional = repository.findById(id);
-            if (userOptional.isPresent()) {
-                User _user = userOptional.get();
-                _user.setFirstName(user.getFirstName());
-                _user.setLastName(user.getLastName());
-                _user.setActive(user.isActive());
-                return new ResponseEntity<>(repository.save(_user), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<User> updateUser(int id, User updatedUser) {
+        Optional<User> userOptional = repository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setFirstName(updatedUser.getFirstName());
+            user.setLastName(updatedUser.getLastName());
+            user.setActive(updatedUser.isActive());
+            return new ResponseEntity<>(repository.save(user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     public ResponseEntity<List<User>> findByActive() {
-        try {
-            List<User> users = repository.findByActive(User.USER_ACTIVE);
-            if (users.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        List<User> users = repository.findByActive(User.USER_ACTIVE);
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

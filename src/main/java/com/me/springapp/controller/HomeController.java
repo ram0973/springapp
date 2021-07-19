@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class HomeController {
     public String home() {
-        return "redirect:/swagger-ui/index.html";
+        return "redirect:/swagger-ui";
     }
 }

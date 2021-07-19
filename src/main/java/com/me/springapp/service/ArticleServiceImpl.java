@@ -1,5 +1,6 @@
 package com.me.springapp.service;
 
+import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.model.Article;
 import com.me.springapp.repository.ArticleRepository;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class ArticleServiceImpl implements ArticleService {
         this.repository = repository;
     }
 
-    public Sort.Direction getSortDirection(String direction) {
+    public static Sort.Direction getSortDirection(String direction) {
         if (direction.equals("asc")) {
             return Sort.Direction.ASC;
         } else if (direction.equals("desc")) {
@@ -36,7 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
         return Sort.Direction.DESC;
     }
 
-    public List<Sort.Order> getSortOrders(String [] sort) {
+    public static List<Sort.Order> getSortOrders(String[] sort) {
         List<Sort.Order> orders = new ArrayList<>();
         if (!sort[0].contains(",")) {
             // sorting single column
@@ -47,122 +48,91 @@ public class ArticleServiceImpl implements ArticleService {
         // will sort more than 2 columns
         // ?sort=column1,direction1&sort=column2,direction2
         for (String sortOrder : sort) {
-            String[] _sort = sortOrder.split(",");
-            orders.add(new Sort.Order(getSortDirection(_sort[1]), _sort[0]));
+            String[] sortArray = sortOrder.split(",");
+            orders.add(new Sort.Order(getSortDirection(sortArray[1]), sortArray[0]));
         }
         return orders;
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> findAll(String title, int page, int size, String[] sort)  {
-        try {
-            Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
-            Page<Article> pagedArticles;
-            if (title == null || title.isBlank()) {
-                pagedArticles = repository.findAll(pageable);
-            } else {
-                pagedArticles = repository.findAllByTitleContaining(title, pageable);
-            }
-            List<Article> articles = pagedArticles.getContent();
-            if (articles.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                Map<String, Object> response = new HashMap<>();
-                response.put("articles", articles);
-                response.put("currentPage", pagedArticles.getNumber());
-                response.put("totalItems", pagedArticles.getTotalElements());
-                response.put("totalPages", pagedArticles.getTotalPages());
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Map<String, Object>> findAll(String title, int page, int size, String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
+        Page<Article> pagedArticles;
+        if (title == null || title.isBlank()) {
+            pagedArticles = repository.findAll(pageable);
+        } else {
+            pagedArticles = repository.findAllByTitleContaining(title, pageable);
+        }
+        List<Article> articles = pagedArticles.getContent();
+        if (articles.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            PagedArticlesDTO response = new PagedArticlesDTO(articles, pagedArticles.getNumber(),
+                pagedArticles.getTotalElements(), pagedArticles.getTotalPages());
+            return new ResponseEntity<PagedArticlesDTO>(response, HttpStatus.OK);
         }
     }
 
     @Override
     public ResponseEntity<Article> findById(int id) {
         Optional<Article> article = repository.findById(id);
-        // return article
-        //          .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-        //          .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         return ResponseEntity.of(article);
     }
 
     @Override
-    public ResponseEntity<Article>findByIdAndActive(int id) {
+    public ResponseEntity<Article> findByIdAndActive(int id) {
         Optional<Article> article = repository.findByIdAndActiveIsTrue(id);
         return ResponseEntity.of(article);
     }
 
     @Override
     public ResponseEntity<Article> createArticle(Article article) {
-        try {
-            Article _article = repository.save(new Article(article.getTitle(), article.getExcerpt(),
-                    article.getContent(), article.isActive(), article.getUser()));
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Article savedArticle = repository.save(article);
+        return new ResponseEntity<>(savedArticle, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<Article> updateArticle(int id, Article article) {
-        try {
-            Optional<Article> _articleOptional = repository.findById(id);
-            if (_articleOptional.isPresent()) {
-                Article _article = _articleOptional.get();
-                _article.setTitle(article.getTitle());
-                _article.setExcerpt(article.getExcerpt());
-                _article.setContent(article.getContent());
-                _article.setActive(article.isActive());
-                _article.setUser(article.getUser());
-                return new ResponseEntity<>(repository.save(_article), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        Optional<Article> articleOptional = repository.findById(id);
+        if (articleOptional.isPresent()) {
+            Article oldArticle = articleOptional.get();
+            oldArticle.setTitle(article.getTitle());
+            oldArticle.setExcerpt(article.getExcerpt());
+            oldArticle.setContent(article.getContent());
+            oldArticle.setActive(article.isActive());
+            oldArticle.setUser(article.getUser());
+            return new ResponseEntity<>(repository.save(oldArticle), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
     }
 
     @Override
     public ResponseEntity<HttpStatus> deleteArticle(int id) {
-        try {
-            repository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        repository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> findAllByActive(String title, int page, int size, String[] sort) {
-        try {
-            Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
-            Page<Article> pagedArticles;
-            if (title == null || title.isBlank()) {
-                pagedArticles = repository.findAllByActiveIsTrue(pageable);
-            } else {
-                pagedArticles = repository.findAllByTitleContainingAndActiveIsTrue(title, pageable);
-            }
-            List<Article> articles = pagedArticles.getContent();
-            if (articles.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                Map<String, Object> response = new HashMap<>();
-                response.put("articles", articles);
-                response.put("currentPage", pagedArticles.getNumber());
-                response.put("totalItems", pagedArticles.getTotalElements());
-                response.put("totalPages", pagedArticles.getTotalPages());
-                return new ResponseEntity<>(response, HttpStatus.OK);
-            }
-        } catch (Exception ex) {
-            logger.error(ex.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
+        Page<Article> pagedArticles;
+        if (title == null || title.isBlank()) {
+            pagedArticles = repository.findAllByActiveIsTrue(pageable);
+        } else {
+            pagedArticles = repository.findAllByTitleContainingAndActiveIsTrue(title, pageable);
+        }
+        List<Article> articles = pagedArticles.getContent();
+        if (articles.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("articles", articles);
+            response.put("currentPage", pagedArticles.getNumber());
+            response.put("totalItems", pagedArticles.getTotalElements());
+            response.put("totalPages", pagedArticles.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 }
