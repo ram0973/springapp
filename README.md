@@ -129,6 +129,7 @@ GET http://localhost:8080/api/articles/active
 ```
 ## Документация (Swagger)
 
-Api Docs: /v3/api-docs/
+Api Docs: /v3/api-docs
+Swagger: /swagger-ui
 
 ## Лицензия: MIT

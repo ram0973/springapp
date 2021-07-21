@@ -43,11 +43,11 @@ public class DBSeedConfig {
                 Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER).orElseThrow()), User.USER_ACTIVE)));
             logger.info("Preloading " + userRepository.save(
                 new User("frodo", "frodo@baggins.com", passwordEncoder.encode("666666"),
-                    Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER).orElseThrow()),
+                    Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_MODERATOR).orElseThrow()),
                     User.USER_ACTIVE)));
             User gendalf = new User("gendalf", "gendalf@white.com",
                 passwordEncoder.encode("666666"),
-                Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER).orElseThrow()), User.USER_ACTIVE);
+                Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_ADMIN).orElseThrow()), User.USER_ACTIVE);
             logger.info("Preloading " + userRepository.save(gendalf));
 
             logger.info("Preloading " + articleRepository.save(
