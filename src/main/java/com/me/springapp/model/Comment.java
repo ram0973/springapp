@@ -2,6 +2,7 @@ package com.me.springapp.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class Comment {
@@ -13,6 +14,10 @@ public class Comment {
     private String body;
 
     private LocalDateTime dateCreated;
+
+    @ManyToOne
+    @JoinColumn(name = "article_id", referencedColumnName = "id", nullable = false)
+    private Article article;
 
     public int getId() {
         return id;

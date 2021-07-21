@@ -20,7 +20,6 @@ import java.util.*;
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
     private final ArticleRepository repository;
 
     @Autowired
@@ -45,7 +44,7 @@ public class ArticleServiceImpl implements ArticleService {
             orders.add(new Sort.Order(getSortDirection(sort[1]), sort[0]));
             return orders;
         }
-        // will sort more than 2 columns
+        // sort more than 2 columns
         // ?sort=column1,direction1&sort=column2,direction2
         for (String sortOrder : sort) {
             String[] sortArray = sortOrder.split(",");
