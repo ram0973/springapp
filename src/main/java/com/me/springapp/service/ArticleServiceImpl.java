@@ -54,7 +54,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> findAll(String title, int page, int size, String[] sort) {
+    public ResponseEntity<PagedArticlesDTO> findAll(String title, int page, int size, String[] sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {
@@ -114,7 +114,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> findAllByActive(String title, int page, int size, String[] sort) {
+    public ResponseEntity<PagedArticlesDTO> findAllByActive(String title, int page, int size, String[] sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {
@@ -126,11 +126,8 @@ public class ArticleServiceImpl implements ArticleService {
         if (articles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            Map<String, Object> response = new HashMap<>();
-            response.put("articles", articles);
-            response.put("currentPage", pagedArticles.getNumber());
-            response.put("totalItems", pagedArticles.getTotalElements());
-            response.put("totalPages", pagedArticles.getTotalPages());
+            PagedArticlesDTO response = new PagedArticlesDTO(articles, pagedArticles.getNumber(),
+                pagedArticles.getTotalElements(), pagedArticles.getTotalPages());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }

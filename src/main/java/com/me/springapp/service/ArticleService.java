@@ -15,5 +15,5 @@ public interface ArticleService {
     ResponseEntity<Article> createArticle(Article article);
     ResponseEntity<Article> updateArticle(int id, Article article);
     ResponseEntity<HttpStatus> deleteArticle(int id);
-    ResponseEntity<Map<String, Object>> findAllByActive(String title, int page, int size, String[] sort);
+    ResponseEntity<PagedArticlesDTO> findAllByActive(String title, int page, int size, String[] sort);
 }

@@ -1,5 +1,6 @@
 package com.me.springapp.controller;
 
+import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.model.Article;
 import com.me.springapp.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ArticleController {
 
     @GetMapping("/articles")
     @PreAuthorize("hasRole('MOD')")
-    public ResponseEntity<Map<String, Object>> getArticles(
+    public ResponseEntity<PagedArticlesDTO> getArticles(
             @RequestParam(required = false) String title,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -63,7 +64,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/active")
-    public ResponseEntity<Map<String, Object>> getActiveArticles(
+    public ResponseEntity<PagedArticlesDTO> getActiveArticles(
             @RequestParam(required = false) String title,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
