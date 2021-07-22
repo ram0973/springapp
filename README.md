@@ -1,3 +1,5 @@
+![Spring application](https://github.com/ram0973/springapp/blob/main/src/main/resources/spring-framework.png?raw=true)
+
 # Пример приложения REST API на языке Java 16 c использованием Spring
 
 Задумывался для обучения и как каркас веб-приложения на Spring, чтобы можно было на 
