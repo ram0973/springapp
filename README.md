@@ -132,8 +132,11 @@ GET http://localhost:8080/api/articles/active
 ```
 ## Документация (Swagger)
 
-Api Docs: /v3/api-docs
-Swagger: /swagger-ui
+
+Документация по Api в формате JSON: http://localhost:8080/v3/api-docs
+
+Swagger главный интерфейс: http://localhost:8080/swagger-ui
+
 
 ## Spring Boot Actuator
 
