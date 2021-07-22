@@ -25,7 +25,7 @@
 4. Деплой на сервер (конфиг nginx c https, docker и прочее)
 5. Попробовать генератор http://www.telosys.org/
 6. Посмотреть что можно взять из JHipster
-7. Конфигурации запуска dev, staging, prod
+7. ~~Конфигурации запуска dev, staging, prod~~
 8. Миграции
 9. Разобраться с Jpa Buddy
 
@@ -80,14 +80,15 @@ cd springapp
 ```
 ## Настройки приложения
 Настройки лежат в src/main/resources/application.properties
+Если нужно сменить среду выполнения, нужно поменять в этом файле свойство spring.profiles.active на нужное
+## 
 
 ## Запуск приложения из исходников
 $ mvn spring-boot:run
 
 ## Создание jar и запуск приложения из него
 ```shell
-$ mvn package
-$ java -jar target/*.jar
+$ mvn package && java -jar target/*.jar
 ```
 
 ## Тестовые запросы к Rest API можно делать с Postman, примеры:
@@ -133,5 +134,13 @@ GET http://localhost:8080/api/articles/active
 
 Api Docs: /v3/api-docs
 Swagger: /swagger-ui
+
+## Spring Boot Actuator
+
+Можно получать разнообразные данные о приложении в формате JSON 
+
+[Документация](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
+
+Использование — открыть один из URL, например http://localhost:8080/actuator/health
 
 ## Лицензия: MIT
