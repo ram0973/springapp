@@ -1,6 +1,5 @@
 package com.me.springapp.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -10,26 +9,19 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import javax.servlet.ServletContext;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Configuration
 public class SwaggerConfig {
 
-    //private ApiKey apiKey() {
-    //    return new ApiKey("Bearer", "Authorization", "header");
-    //}
-
     private ApiInfo apiInfo() {
         return new ApiInfo(
-            "REST API",
-            "",
+            "Spring REST API example",
+            "User, Article models",
             "1.0",
-            "Terms of service",
-            new Contact("Ramil Yabbarov", "yabbarov.ru", "ramil@yabbarov.ru"),
+            "",
+            null,
             "License of API - MIT",
             "",
             Collections.emptyList());
@@ -61,19 +53,4 @@ public class SwaggerConfig {
             .paths(PathSelectors.any())
             .build();
     }
-
-//    public Docket api() {
-//        HttpAuthenticationScheme authenticationScheme = HttpAuthenticationScheme
-//            .JWT_BEARER_BUILDER
-//            .name("Authorization")
-//            .build();
-//        return new Docket(DocumentationType.OAS_30)
-//            .apiInfo(apiInfo())
-//            .select()
-//            .apis(RequestHandlerSelectors.any())
-//            .paths(PathSelectors.ant(context.getContextPath() + "/api/**"))
-//            .build()
-//            .securityContexts(Collections.singletonList(securityContext()))
-//            .securitySchemes(Collections.singletonList(authenticationScheme));
-//    }
 }
