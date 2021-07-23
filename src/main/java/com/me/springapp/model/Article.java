@@ -27,6 +27,8 @@ public class Article {
     @NotBlank
     private String content;
 
+    private String image;
+
     private boolean active = false;
 
     private LocalDateTime dateCreated;

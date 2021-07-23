@@ -39,7 +39,18 @@
 
 ## Установка необходимых зависимостей и настройка базы
 
-Установка Java 16 JDK (Ubuntu 20.04/WSL)
+Можно (не обязательно) поставить sdkman - утилиту для установки Maven, Gradle, JDK, spring console, etc. 
+Список приложений можно получить командой sdk list
+
+
+```shell
+sudo curl -s "https://get.sdkman.io" | bash
+# Follow the instructions on-screen to complete installation.
+# Next, open a new terminal or enter:
+$ source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk version
+```
+Установка Java 16 JDK (Ubuntu 20.04/WSL) (либо можно поставить с помощью sdk: sdk list java)
 ```shell
 sudo add-apt-repository ppa:linuxuprising/java
 sudo apt-get update
@@ -47,7 +58,7 @@ sudo apt-get install oracle-java16-installer --install-recommends
 java --version
 ```
 
-Установка Maven 3.8.1
+Установка Maven 3.8.1 (либо можно поставить с помощью sdk: sdk list maven)
 ```shell
 cd /opt
 sudo wget https://apache-mirror.rbc.ru/pub/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
@@ -86,10 +97,44 @@ cd springapp
 ## Запуск приложения из исходников
 $ mvn spring-boot:run
 
-## Создание jar и запуск приложения из него
+## Создание jar и запуск приложения
 ```shell
-$ mvn package && java -jar target/*.jar
+mvn package && java -jar target/*.jar
+
+Также, благодаря такой настройке в pom.xml
+
+<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <configuration>
+        <executable>true</executable>
+    </configuration>
+</plugin>
+Собирается executable (исполнимый) jar:
+
+Поэтому запустить можно и так:
+chmod +x target/*.jar
+target/*.jar
+````
+### Управление jar с помощью systemd:
 ```
+Создать скрипт myapp.service в /etc/systemd/system:
+ 
+[Unit]
+Description=myapp
+After=syslog.target
+
+[Service]
+User=myapp
+ExecStart=/var/myapp/myapp.jar
+SuccessExitStatus=143
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Docker: TODO
 
 ## Тестовые запросы к Rest API можно делать с Postman, примеры:
 Регистрация:
@@ -140,10 +185,31 @@ Swagger главный интерфейс: http://localhost:8080/swagger-ui
 
 ## Spring Boot Actuator
 
-Можно получать разнообразные данные о приложении в формате JSON 
+Можно получать разнообразные данные о работе приложении в формате JSON 
 
 [Документация](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
 
 Использование — открыть один из URL, например http://localhost:8080/actuator/health
+
+## Консоль spring boot
+
+Можно установить консоль spring, с помощью которой можно создать новое приложение spring boot, получить захешированный 
+пароль и другое:
+
+```shell
+sdk list springboot
+sdk install springboot "VERSION"
+spring version
+```
+
+## Devtools
+
+При разработке приложения произойдёт рестарт приложения при следующем действии: 
+
+В Eclipse - сохранение файла;
+
+В IntelliJ IDEA - сборка проекта (Build -> Build Project | Ctrl-F9);
+
+Запуск mvn compile.
 
 ## Лицензия: MIT
