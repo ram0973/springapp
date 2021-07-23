@@ -1,6 +1,6 @@
-<h1 align="center"><img src="https://github.com/ram0973/springapp/blob/main/src/main/resources/spring-framework.png?raw=true" alt="Spring Application"></h1>
-
 # Пример приложения REST API на языке Java 16 c использованием Spring
+
+<h1 align="center"><img src="https://github.com/ram0973/springapp/blob/main/src/main/resources/spring-framework.png?raw=true" alt="Spring Application"></h1>
 
 Задумывался для обучения и как каркас веб-приложения на Spring, чтобы можно было на 
 реальном примере попробовать написать бэкенд на Java и к нему фронтэнд на JS/TS или приложение Android,    
