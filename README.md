@@ -44,6 +44,7 @@
 
 
 ```shell
+sudo apt install zip unzip
 sudo curl -s "https://get.sdkman.io" | bash
 # Follow the instructions on-screen to complete installation.
 # Next, open a new terminal or enter:
