@@ -48,7 +48,7 @@ sudo apt install zip unzip
 sudo curl -s "https://get.sdkman.io" | bash
 # Follow the instructions on-screen to complete installation.
 # Next, open a new terminal or enter:
-$ source "$HOME/.sdkman/bin/sdkman-init.sh"
+$ . "$HOME/.sdkman/bin/sdkman-init.sh" # also add this to .bashrc
 sdk version
 ```
 Установка Java 16 JDK (Ubuntu 20.04/WSL) (либо можно поставить с помощью sdk: sdk list java)
@@ -135,7 +135,30 @@ TimeoutStopSec=10
 WantedBy=multi-user.target
 ```
 
-### Docker: TODO
+### Запуск приложения с помощью Docker - отдельные контейнеры: 
+```shell
+# Запуск приложения в dev среде, без отдельной docker сети:
+
+# Способ 1 (приложение в контейнере)
+
+# БД Postgresql, на хосте не должен быть запущен Postgresql
+docker build . -f ./docker/postgresql/Dockerfile -t psqldb:latest
+docker run --network host psqldb:latest
+# Добавить создание базы и прочее 
+
+# Приложение в контейнере
+mvn package
+docker build . -f ./docker/springapp/Dockerfile -t springapp:latest
+docker run --network host springapp:latest
+
+# Способ 2 (приложение без контейнера, на хосте не должен быть запущен Postgresql)
+docker build . -f ./docker/postgresql/Dockerfile -t psqldb:latest
+docker run --network host psqldb:latest # на хосте
+mvn spring-boot:run
+
+
+
+```
 
 ## Тестовые запросы к Rest API можно делать с Postman, примеры:
 Регистрация:
