@@ -1,0 +1,9 @@
+---
+version: "3.8"
+services:
+  psql:
+    container_name: springapp-psql
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./docker/postgresql/Dockerfile

@@ -1,0 +1,29 @@
+---
+# This docker-compose file is required to bind ports in development,
+# since binding ports in regular compose file will ruin scaling
+# in production. This file is ignoring in production, but been using
+# in development with: $ docker-compose up
+
+version: "3.8"
+services:
+  springapp:
+    container_name: springapp
+    restart: on-failure
+    network_mode: host
+    build:
+      context: .
+
+      dockerfile: ./docker/springapp/Dockerfile
+    depends_on:
+      - psql
+
+  psql:
+    network_mode: host
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    restart: always
+    network_mode: host
+    environment:
+      PGADMIN_DEFAULT_EMAIL: psql@psql.psql
+      PGADMIN_DEFAULT_PASSWORD: psql
