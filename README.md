@@ -2,8 +2,8 @@
 
 <h1 align="center"><img src="https://github.com/ram0973/springapp/blob/main/src/main/resources/spring-framework.png?raw=true" alt="Spring Application"></h1>
 
-Задумывался для обучения и как каркас веб-приложения на Spring, чтобы можно было на 
-реальном примере попробовать написать бэкенд на Java и к нему фронтэнд на JS/TS или приложение Android,    
+Задумывался для обучения и как каркас веб-приложения на Spring, чтобы можно было на
+реальном примере попробовать написать бэкенд на Java и к нему фронтэнд на JS/TS или приложение Android,
 которое будет получать данные из REST API. Приложение не должно переусложняться, как JHipster.
 
 Что реализовано:
@@ -29,17 +29,17 @@
 8. Миграции
 9. Разобраться с Jpa Buddy
 
-Внимание: приложение не готово к production среде, и использованные решения могут быть ошибочными/небезопасными. 
+Внимание: приложение не готово к production среде, и использованные решения могут быть ошибочными/небезопасными.
 
 ## Требования (в чём тестировалось)
 0. Ubuntu 20.04.2 или WSL
 1. Java JDK 16
-2. Maven 3.8.1 
+2. Maven 3.8.1
 3. Postgresql 12
 
 ## Установка необходимых зависимостей и настройка базы
 
-Можно (не обязательно) поставить sdkman - утилиту для установки Maven, Gradle, JDK, spring console, etc. 
+Можно (не обязательно) поставить sdkman - утилиту для установки Maven, Gradle, JDK, spring console, etc.
 Список приложений можно получить командой sdk list
 
 
@@ -93,7 +93,7 @@ cd springapp
 ## Настройки приложения
 Настройки лежат в src/main/resources/application.properties
 Если нужно сменить среду выполнения, нужно поменять в этом файле свойство spring.profiles.active на нужное
-## 
+##
 
 ## Запуск приложения из исходников
 $ mvn spring-boot:run
@@ -120,7 +120,7 @@ target/*.jar
 ### Управление jar с помощью systemd:
 ```
 Создать скрипт myapp.service в /etc/systemd/system:
- 
+
 [Unit]
 Description=myapp
 After=syslog.target
@@ -135,7 +135,7 @@ TimeoutStopSec=10
 WantedBy=multi-user.target
 ```
 
-### Запуск приложения с помощью Docker - отдельные контейнеры: 
+### Запуск приложения с помощью Docker - отдельные контейнеры:
 ```shell
 # Запуск приложения в dev среде, без отдельной docker сети:
 
@@ -143,21 +143,25 @@ WantedBy=multi-user.target
 
 # БД Postgresql, на хосте не должен быть запущен Postgresql
 docker build . -f ./docker/postgresql/Dockerfile -t psqldb:latest
-docker run --network host psqldb:latest
-# Добавить создание базы и прочее 
+docker run -e POSTGRES_PASSWORD=postgres --network host psqldb:latest
+# Добавить создание базы и прочее
 
 # Приложение в контейнере
 mvn package
 docker build . -f ./docker/springapp/Dockerfile -t springapp:latest
-docker run --network host springapp:latest
+docker run -e POSTGRES_PASSWORD=postgres --network host springapp:latest
 
 # Способ 2 (приложение без контейнера, на хосте не должен быть запущен Postgresql)
 docker build . -f ./docker/postgresql/Dockerfile -t psqldb:latest
-docker run --network host psqldb:latest # на хосте
+docker run --network host -e POSTGRES_PASSWORD=postgres psqldb:latest #
 mvn spring-boot:run
-
-
-
+```
+### Запуск приложения с помощью Docker compose:
+```shell
+# Development
+docker-compose up
+# Production
+docker-compose -f docker-compose.yml up
 ```
 
 ## Тестовые запросы к Rest API можно делать с Postman, примеры:
@@ -209,7 +213,7 @@ Swagger главный интерфейс: http://localhost:8080/swagger-ui
 
 ## Spring Boot Actuator
 
-Можно получать разнообразные данные о работе приложении в формате JSON 
+Можно получать разнообразные данные о работе приложении в формате JSON
 
 [Документация](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
 
@@ -217,7 +221,7 @@ Swagger главный интерфейс: http://localhost:8080/swagger-ui
 
 ## Консоль spring boot
 
-Можно установить консоль spring, с помощью которой можно создать новое приложение spring boot, получить захешированный 
+Можно установить консоль spring, с помощью которой можно создать новое приложение spring boot, получить захешированный
 пароль и другое:
 
 ```shell
@@ -228,7 +232,7 @@ spring version
 
 ## Devtools
 
-При разработке приложения произойдёт рестарт приложения при следующем действии: 
+При разработке приложения произойдёт рестарт приложения при следующем действии:
 
 В Eclipse - сохранение файла;
 
