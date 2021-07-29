@@ -1,8 +1,9 @@
-FROM maven:3.8.1-openjdk-16
+FROM adoptopenjdk/openjdk16:jdk-16.0.1_9-debian-slim
 LABEL maintainer="ram0973@gmail.com"
-RUN adduser --system springapp
-USER springapp
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+WORKDIR /app
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY src ./src
+CMD ["./mvnw", "spring-boot:run"]
 EXPOSE 8080

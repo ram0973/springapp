@@ -1,7 +1,5 @@
 ---
-# This docker-compose file is required to bind ports in development,
-# since binding ports in regular compose file will ruin scaling
-# in production. This file is ignoring in production, but been using
+# This docker-compose file is ignoring in production, but been using
 # in development with: $ docker-compose up
 
 version: "3.8"
@@ -9,25 +7,24 @@ services:
   postgresql-service:
     container_name: springapp-postgres-dev
     network_mode: host
+    env_file:
+      - ./src/main/resources/.env
     build:
       context: .
       dockerfile: ./docker/postgresql/Dockerfile
-    environment:
-      - POSTGRES_DB=springapp
-      - POSTGRES_USER=springapp
-      - POSTGRES_PASSWORD=springapp
 
   springapp-service:
     container_name: springapp-dev
     restart: "no"
     network_mode: host
+    env_file:
+      - ./src/main/resources/.env
     build:
       context: .
-      dockerfile: docker/springapp/dev/Dockerfile.dev
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://127.0.0.1:5432/springapp
-
+      dockerfile: docker/springapp/Dockerfile
+      target: development
+    volumes:
+      - ./:/app
     depends_on:
       - postgresql-service
 

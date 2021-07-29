@@ -5,7 +5,5 @@ RUN echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen && \
 ENV LANG ru_RU.utf8
 ENV TZ UTC
 RUN echo "$TZ" > /etc/timezone && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
-# VOLUME  ["/var/lib/postgresql/data"]
+VOLUME  ["/var/lib/postgresql/data"]
 EXPOSE 5432
-#RUN adduser --system --group springapp
-#USER springapp:springapp

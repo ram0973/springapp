@@ -3,7 +3,7 @@
 # Should be used directly in development.
 # Automatically loads `docker-compose.override.yml` if it exists.
 # No extra steps required.
-# Should be used together with `-f docker-compose.prod.yml`
+# Should be used together with `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up`
 # in production.
 
 version: "3.8"
@@ -11,20 +11,20 @@ services:
   postgresql-service:
     container_name: springapp-postgres-prod
     restart: unless-stopped
+    env_file:
+      - ./src/main/resources/.env
     build:
       context: .
       dockerfile: ./docker/postgresql/Dockerfile
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
 
   springapp-service:
     container_name: springapp-prod
     restart: on-failure
+    env_file:
+      - ./src/main/resources/.env
     build:
       context: .
-      dockerfile: docker/springapp/prod/Dockerfile.prod
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      dockerfile: docker/springapp/Dockerfile
+      target: production
     depends_on:
       - postgresql-service
