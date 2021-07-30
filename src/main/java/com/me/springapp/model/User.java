@@ -11,17 +11,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
+@Table(name = "users",
+    uniqueConstraints = {
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")
-})
+    })
 public class User {
 
     public final static boolean USER_ACTIVE = true;
     public final static boolean USER_DISABLED = false;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @NotBlank
@@ -37,28 +38,22 @@ public class User {
     @Size(max = 100)
     private String password;
 
-    @Size(max = 100)
-    private String firstName;
-
-    @Size(max = 100)
-    private String lastName;
-
     private boolean active;
 
     private LocalDateTime dateCreated;
 
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final Set<Article> articles = new HashSet<>();
 
     @ManyToMany(
         //fetch = FetchType.LAZY,
         cascade = {
             CascadeType.MERGE
-    })
+        })
     @JsonIgnore
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
 
@@ -75,21 +70,18 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format(
-                "User[id=%d, firstName='%s', lastName='%s']",
-                id, firstName, lastName);
+        return "User{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", email='" + email + '\'' +
+            ", active=" + active +
+            ", dateCreated=" + dateCreated +
+            ", roles=" + roles +
+            '}';
     }
 
     public int getId() {
         return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     public String getUsername() {
@@ -126,14 +118,6 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public void setActive(boolean active) {

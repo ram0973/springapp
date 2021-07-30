@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "roles", uniqueConstraints = {
-                @UniqueConstraint(columnNames = "name"),
-})
+@Table(name = "roles", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +15,7 @@ public class Role {
     @Column(length = 20)
     private RoleEnum name;
 
-    @ManyToMany(mappedBy = "roles", cascade = {
-        CascadeType.MERGE
-    })
+    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE})
     List<User> users;
 
     public Role() {
