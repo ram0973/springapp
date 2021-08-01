@@ -27,7 +27,8 @@
 6. Посмотреть что можно взять из JHipster
 7. ~~Конфигурации запуска dev, staging, prod~~
 8. Миграции
-9. Разобраться с Jpa Buddy
+9. ~~Разобраться с Jpa Buddy~~
+10. https://www.testcontainers.org/
 
 Внимание: приложение не готово к production среде, и использованные решения могут быть ошибочными/небезопасными.
 
@@ -39,37 +40,31 @@
 
 ## Установка необходимых зависимостей и настройка базы
 
-Можно (не обязательно) поставить sdkman - утилиту для установки Maven, Gradle, JDK, spring console, etc.
+Можно (необязательно) поставить sdkman - утилиту для установки Maven, Gradle, JDK, spring console, etc.
 Список приложений можно получить командой sdk list
 
-
+Установка Java 16 JDK (Ubuntu 20.04/WSL) + Maven 3.8.1
 ```shell
 sudo apt install zip unzip
-sudo curl -s "https://get.sdkman.io" | bash
-# Follow the instructions on-screen to complete installation.
-# Next, open a new terminal or enter:
-$ . "$HOME/.sdkman/bin/sdkman-init.sh" # also add this to .bashrc
-sdk version
-```
-Установка Java 16 JDK (Ubuntu 20.04/WSL) (либо можно поставить с помощью sdk: sdk list java)
-```shell
-sudo add-apt-repository ppa:linuxuprising/java
+wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
+echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
 sudo apt-get update
-sudo apt-get install oracle-java16-installer --install-recommends
-java --version
-```
+sudo apt install bellsoft-java16-full
 
-Установка Maven 3.8.1 (либо можно поставить с помощью sdk: sdk list maven)
-```shell
 cd /opt
-sudo wget https://apache-mirror.rbc.ru/pub/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz
-sudo tar xzvf apache-maven-3.8.1-bin.tar.gz
-sudo rm apache-maven-3.8.1-bin.tar.gz
-sudo nano /etc/environments
-# добавить в конце -> :/opt/apache-maven-3.8.1/bin
-. /etc/environments
+sudo wget https://apache-mirror.rbc.ru/pub/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip
+sudo unzip apache-maven-3.8.1-bin.zip
+rm apache-maven-3.8.1-bin.zip
+# в /etc/profile:
+export JAVA_HOME=/usr/lib/jvm/bellsoft-java16-full-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+export MAVEN_HOME=/opt/apache-maven-3.8.1
+export PATH=$MAVEN_HOME/bin:$PATH
+
+java --version
 mvn --version
 ```
+
 
 Установка Postgresql 12:
 ```shell

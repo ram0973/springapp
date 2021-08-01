@@ -15,7 +15,6 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository repository;
 
     @Autowired
@@ -60,8 +59,6 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = repository.findById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setFirstName(updatedUser.getFirstName());
-            user.setLastName(updatedUser.getLastName());
             user.setActive(updatedUser.isActive());
             return new ResponseEntity<>(repository.save(user), HttpStatus.OK);
         } else {
