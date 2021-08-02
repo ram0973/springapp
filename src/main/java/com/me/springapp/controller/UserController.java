@@ -2,10 +2,7 @@ package com.me.springapp.controller;
 
 import com.me.springapp.model.User;
 import com.me.springapp.service.UserService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,14 +12,10 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
     private UserService service;
-
-    @Autowired
-    public void setUserService(UserService service) {
-        this.service = service;
-    }
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")

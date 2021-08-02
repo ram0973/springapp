@@ -1,7 +1,9 @@
 package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,9 +12,12 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "articles")
 public class Article {
-    @Column(nullable = false)
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -34,7 +39,7 @@ public class Article {
     private LocalDateTime dateCreated;
 
     @ManyToOne
-    @JsonIgnoreProperties({"email", "password", "active"})
+    //@JsonIgnoreProperties({"email", "password", "active"})
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
 
@@ -44,59 +49,4 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<ArticleTag> tags;
-
-    public Article(String title, String excerpt, String content, boolean active, User user) {
-        this.title = title;
-        this.excerpt = excerpt;
-        this.content = content;
-        this.active = active;
-        this.user = user;
-    }
-
-    public Article() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getExcerpt() {
-        return excerpt;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setExcerpt(String excerpt) {
-        this.excerpt = excerpt;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
