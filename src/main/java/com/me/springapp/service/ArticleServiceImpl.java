@@ -1,10 +1,10 @@
 package com.me.springapp.service;
 
 import com.me.springapp.dto.PagedArticlesDTO;
+import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Article;
 import com.me.springapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +43,9 @@ public class ArticleServiceImpl implements ArticleService, PagedEntity {
             pagedArticles = repository.findAll(pageable);
         } else {
             pagedArticles = repository.findAllByTitleContaining(title, pageable);
+        }
+        if (pagedArticles.getContent().isEmpty()) {
+            throw new NoSuchUsersException();
         }
         return getPagedArticlesDTOResponseEntity(pagedArticles);
     }

@@ -11,10 +11,10 @@ public interface UserService {
     User saveUser(User user);
     Role saveRole(Role role);
     public void addRoleToUser(String userName, RoleEnum roleName);
-    ResponseEntity<PagedUsersDTO> findAll(String username, int page, int size, String[] sort);
+    ResponseEntity<PagedUsersDTO> findAll(int page, int size, String[] sort);
     ResponseEntity<User> findById(int id);
     ResponseEntity<User> createUser(User user);
     ResponseEntity<User> updateUser(int id, User user);
     ResponseEntity<HttpStatus> deleteUser(int id);
-    ResponseEntity<PagedUsersDTO> findAllByActive(String username, int page, int size, String[] sort);
+    ResponseEntity<PagedUsersDTO> findAllByActive(int page, int size, String[] sort);
 }
