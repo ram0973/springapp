@@ -1,77 +1,111 @@
 package com.me.springapp.service;
 
+import com.me.springapp.dto.PagedUsersDTO;
+import com.me.springapp.exceptions.NoSuchRoleException;
+import com.me.springapp.exceptions.NoSuchUserException;
+import com.me.springapp.exceptions.NoSuchUsersException;
+import com.me.springapp.model.Role;
+import com.me.springapp.model.RoleEnum;
 import com.me.springapp.model.User;
+import com.me.springapp.repository.RoleRepository;
 import com.me.springapp.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    public UserServiceImpl(UserRepository repository) {
-        this.repository = repository;
-    }
-
-    @Override
-    public ResponseEntity<List<User>> findAll() {
-        List<User> users;
-        users = repository.findAll();
+    private ResponseEntity<PagedUsersDTO> getPagedUsersDTOResponseEntity(Page<User> pagedUsers) {
+        List<User> users = pagedUsers.getContent();
         if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new NoSuchUsersException();
         } else {
-            return new ResponseEntity<>(users, HttpStatus.OK);
+            PagedUsersDTO response = new PagedUsersDTO(users, pagedUsers.getNumber(),
+                pagedUsers.getTotalElements(), pagedUsers.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
     @Override
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Role saveRole(Role role) {
+        return roleRepository.save(role);
+    }
+
+    @Override
+    public void addRoleToUser(String userName, RoleEnum roleName) {
+        User user = userRepository.findByUsername(userName).orElseThrow(NoSuchUserException::new);
+        Role role = roleRepository.findByName(roleName).orElseThrow(NoSuchRoleException::new);
+        Set<Role> roles = user.getRoles();
+        roles.add(role);
+        user.setRoles(roles);
+        userRepository.save(user);
+    }
+
+    @Override
+    public ResponseEntity<PagedUsersDTO> findAll(int page, int size, String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntity.getSortOrders(sort)));
+        Page<User> pagedUsers = userRepository.findAll(pageable);
+        return getPagedUsersDTOResponseEntity(pagedUsers);
+    }
+
+    @Override
     public ResponseEntity<User> findById(int id) {
-        Optional<User> user = repository.findById(id);
+        Optional<User> user = userRepository.findById(id);
         return user
             .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            .orElseThrow(NoSuchUserException::new);
     }
 
     @Override
     public ResponseEntity<User> createUser(User user) {
-        User savedUser = repository.save(new User(user.getUsername(), user.getEmail(), user.getPassword(),
-                    user.getRoles(), user.isActive()));
-            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        User savedUser = userRepository.save(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<HttpStatus> deleteUser(int id) {
-        repository.deleteById(id);
+        userRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<User> updateUser(int id, User updatedUser) {
-        Optional<User> userOptional = repository.findById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setActive(updatedUser.isActive());
-            return new ResponseEntity<>(repository.save(user), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new NoSuchUserException();
         }
+        User user = userOptional.get();
+        // TODO: update fields via dto-mapper
+        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
+
     }
 
     @Override
-    public ResponseEntity<List<User>> findByActive() {
-        List<User> users = repository.findByActive(User.USER_ACTIVE);
-        if (users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<PagedUsersDTO> findAllByActive(int page, int size, String[] sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntity.getSortOrders(sort)));
+        Page<User> pagedUsers;
+        pagedUsers = userRepository.findAllByActiveIsTrue(pageable);
+        return getPagedUsersDTOResponseEntity(pagedUsers);
     }
 }
