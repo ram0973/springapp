@@ -19,6 +19,13 @@
 		<maven.compiler.source>16</maven.compiler.source>
 		<maven.compiler.target>16</maven.compiler.target>
 	</properties>
+    <annotationProcessorPaths>
+        <path>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+        </path>
+    </annotationProcessorPaths>
 	<dependencies>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -46,6 +53,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
