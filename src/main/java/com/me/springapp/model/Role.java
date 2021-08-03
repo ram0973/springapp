@@ -13,9 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "roles", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Role {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Enumerated(EnumType.STRING)
@@ -24,4 +23,7 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE})
     List<User> users;
+
+    public Role(RoleEnum role) {
+    }
 }

@@ -1,4 +1,3 @@
-#FROM adoptopenjdk/openjdk16:jdk-16.0.1_9-debian-slim AS base
 FROM bellsoft/liberica-openjdk-debian:16.0.2-7 AS base
 LABEL maintainer="ram0973@gmail.com"
 WORKDIR /app
