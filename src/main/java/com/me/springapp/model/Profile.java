@@ -1,7 +1,6 @@
 package com.me.springapp.model;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -32,10 +31,10 @@ public class Profile {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Profile profile = (Profile) o;
-
-        return Objects.equals(id, profile.id);
+        return id.equals(profile.id) && Objects.equals(firstName, profile.firstName) &&
+            Objects.equals(lastName, profile.lastName) && Objects.equals(user, profile.user);
     }
 
     @Override

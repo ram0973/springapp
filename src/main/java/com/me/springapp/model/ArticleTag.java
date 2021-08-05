@@ -36,17 +36,16 @@ public class ArticleTag {
     @ManyToMany(mappedBy = "tags", cascade = {
         CascadeType.PERSIST,
         CascadeType.MERGE
-    })
+    }, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Article> articles;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         ArticleTag that = (ArticleTag) o;
-
-        return Objects.equals(id, that.id);
+        return id == that.id && tag.equals(that.tag) && Objects.equals(articles, that.articles);
     }
 
     @Override

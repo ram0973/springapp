@@ -15,7 +15,6 @@ CMD ["./mvnw", "spring-boot:run"]
 FROM base as build
 RUN ./mvnw package
 
-# FROM adoptopenjdk/openjdk16:jre-16.0.1_9-debianslim as production
 FROM bellsoft/liberica-openjdk-debian:16.0.2-7 AS  production
 COPY --from=build /app/target/*.jar /spring-app.jar
 RUN adduser --system springapp

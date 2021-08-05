@@ -5,7 +5,6 @@ import com.me.springapp.security.payload.SignupRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
-    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest);
-    public ResponseEntity<?> registerUser(SignupRequest signUpRequest);
-    public ResponseEntity<?> registerUserWithRoles(SignupRequest signUpRequest);
+    ResponseEntity<?> authenticateUser(LoginRequest loginRequest);
+    ResponseEntity<?> registerUser(SignupRequest signUpRequest);
 }

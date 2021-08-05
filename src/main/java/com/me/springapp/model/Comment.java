@@ -1,9 +1,9 @@
 package com.me.springapp.model;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -21,6 +21,7 @@ public class Comment {
     @Column(name = "id", nullable = false)
     private int id;
 
+    @NotBlank
     private String body;
 
     private LocalDateTime dateCreated;
@@ -32,10 +33,10 @@ public class Comment {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-
-        return Objects.equals(id, comment.id);
+        return id == comment.id && body.equals(comment.body) && Objects.equals(dateCreated, comment.dateCreated)
+            && Objects.equals(article, comment.article);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.me.springapp.model;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,17 +24,20 @@ public class Role {
     @Column(length = 20)
     private RoleEnum name;
 
-    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @ToString.Exclude
     List<User> users;
+
+    public Role(RoleEnum name) {
+        this.name = name;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-
-        return Objects.equals(id, role.id);
+        return id.equals(role.id) && name == role.name && Objects.equals(users, role.users);
     }
 
     @Override

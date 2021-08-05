@@ -2,7 +2,6 @@ package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -20,10 +19,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users",
-    uniqueConstraints = {@UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
 public class User {
-
     public final static boolean USER_ACTIVE = true;
     public final static boolean USER_DISABLED = false;
 
@@ -48,7 +46,7 @@ public class User {
 
     private LocalDateTime dateCreated;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Article> articles = new HashSet<>();
 
@@ -59,13 +57,24 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    public User(String username, String email, String password, boolean active, LocalDateTime dateCreated,
+                Set<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.active = active;
+        this.dateCreated = dateCreated;
+        this.roles = roles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-
-        return Objects.equals(id, user.id);
+        return id == user.id && active == user.active && username.equals(user.username) && email.equals(user.email)
+            && password.equals(user.password) && Objects.equals(dateCreated, user.dateCreated) &&
+            Objects.equals(articles, user.articles) && Objects.equals(roles, user.roles);
     }
 
     @Override

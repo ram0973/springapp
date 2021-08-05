@@ -1,8 +1,8 @@
 package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,7 +30,6 @@ public class Article {
     @NotBlank
     private String excerpt;
 
-    @NotBlank
     private String content;
 
     private String image;
@@ -41,6 +40,7 @@ public class Article {
 
     @ManyToOne
     //@JsonIgnoreProperties({"email", "password", "active"})
+    @JsonInclude
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
 
@@ -55,10 +55,12 @@ public class Article {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-
-        return Objects.equals(id, article.id);
+        return id == article.id && active == article.active && title.equals(article.title) &&
+            Objects.equals(excerpt, article.excerpt) && Objects.equals(content, article.content) &&
+            Objects.equals(image, article.image) && Objects.equals(dateCreated, article.dateCreated) &&
+            Objects.equals(user, article.user) && Objects.equals(tags, article.tags);
     }
 
     @Override

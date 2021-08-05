@@ -4,12 +4,12 @@ import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.model.Article;
 import com.me.springapp.service.ArticleService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+//TODO: check this
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")

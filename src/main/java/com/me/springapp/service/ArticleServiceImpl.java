@@ -5,7 +5,6 @@ import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Article;
 import com.me.springapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -73,13 +72,13 @@ public class ArticleServiceImpl implements ArticleService, PagedEntity {
     public ResponseEntity<Article> updateArticle(int id, Article article) {
         Optional<Article> articleOptional = repository.findById(id);
         if (articleOptional.isPresent()) {
-            Article oldArticle = articleOptional.get();
-            oldArticle.setTitle(article.getTitle());
-            oldArticle.setExcerpt(article.getExcerpt());
-            oldArticle.setContent(article.getContent());
-            oldArticle.setActive(article.isActive());
-            oldArticle.setUser(article.getUser());
-            return new ResponseEntity<>(repository.save(oldArticle), HttpStatus.OK);
+            Article articleToChange = articleOptional.get();
+            articleToChange.setTitle(article.getTitle());
+            articleToChange.setExcerpt(article.getExcerpt());
+            articleToChange.setContent(article.getContent());
+            articleToChange.setActive(article.isActive());
+            articleToChange.setUser(article.getUser());
+            return new ResponseEntity<>(repository.save(articleToChange), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

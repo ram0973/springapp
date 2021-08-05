@@ -15,10 +15,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.*;
 
 @Configuration
-@RequiredArgsConstructor @Slf4j
+@RequiredArgsConstructor
+@Slf4j
 public class DBSeedConfig {
     private final PasswordEncoder passwordEncoder;
 
@@ -32,43 +33,24 @@ public class DBSeedConfig {
             log.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_USER)));
 
             log.info("Preloading " + userRepository.save(
-                new User(0, "bilbo", "bilbo@baggins.com", passwordEncoder.encode("666666"),
+                new User("bilbo", "bilbo@baggins.com", passwordEncoder.encode("666666"),
                     User.USER_ACTIVE, LocalDateTime.now(),
-                    Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER).orElseThrow()))));
+                    new HashSet<>(List.of(new Role(RoleEnum.ROLE_USER))))));
             log.info("Preloading " + userRepository.save(
-                new User(1, "frodo", "frodo@baggins.com", passwordEncoder.encode("666666"),
+                new User("frodo", "frodo@baggins.com", passwordEncoder.encode("666666"),
                     User.USER_ACTIVE, LocalDateTime.now(),
-                    Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_MODERATOR).orElseThrow()))));
-            User gendalf = new User(2, "gendalf", "gendalf@white.com",
+                    new HashSet<>(List.of(new Role(RoleEnum.ROLE_USER))))));
+            User gendalf = new User("gendalf", "gendalf@white.com",
                 passwordEncoder.encode("666666"),
                 User.USER_ACTIVE, LocalDateTime.now(),
-                Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_ADMIN).orElseThrow()));
+                new HashSet<>(List.of(new Role(RoleEnum.ROLE_USER))));
             log.info("Preloading " + userRepository.save(gendalf));
 
-            log.info("Preloading " + articleRepository.save(
-                    new Article(0, "1 article", "Excerpt", "Content", null, true, gendalf, null)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(1, "2 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(2, "3 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(3, "4 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(4, "5 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(5, "6 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(6, "7 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(7, "8 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(8, "9 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(9, "10 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(10, "11 article", "Excerpt", "Content", true, gendalf)));
-            log.info("Preloading " + articleRepository.save(
-                    new Article(11, "12 article", "Excerpt", "Content", true, gendalf)));
+            for (int i = 0; i < 12; i++) {
+                log.info("Preloading " + articleRepository.save(
+                    new Article(i, String.format("Article №%d", i), "Excerpt", "Content", null,
+                        true, LocalDateTime.now(), gendalf, null)));
+            }
         };
     }
 }
