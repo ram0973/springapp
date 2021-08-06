@@ -2,7 +2,6 @@ package com.me.springapp.service;
 
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.model.Role;
-import com.me.springapp.model.RoleEnum;
 import com.me.springapp.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

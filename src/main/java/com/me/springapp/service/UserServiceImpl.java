@@ -5,7 +5,6 @@ import com.me.springapp.exceptions.NoSuchRoleException;
 import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Role;
-import com.me.springapp.model.RoleEnum;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.RoleRepository;
 import com.me.springapp.repository.UserRepository;

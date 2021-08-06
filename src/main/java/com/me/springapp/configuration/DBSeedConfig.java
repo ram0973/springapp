@@ -2,7 +2,6 @@ package com.me.springapp.configuration;
 
 import com.me.springapp.model.Article;
 import com.me.springapp.model.Role;
-import com.me.springapp.model.RoleEnum;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.RoleRepository;
@@ -28,22 +27,18 @@ public class DBSeedConfig {
                                    RoleRepository roleRepository,
                                    ArticleRepository articleRepository) {
         return args -> {
-            log.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_ADMIN)));
-            log.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_MODERATOR)));
-            log.info("Preloading " + roleRepository.save(new Role(RoleEnum.ROLE_USER)));
-
             log.info("Preloading " + userRepository.save(
                 new User("bilbo", "bilbo@baggins.com", passwordEncoder.encode("666666"),
                     User.USER_ACTIVE, LocalDateTime.now(),
-                    new HashSet<>(List.of(new Role(RoleEnum.ROLE_USER))))));
+                    Set.of(Role.ROLE_USER))));
             log.info("Preloading " + userRepository.save(
                 new User("frodo", "frodo@baggins.com", passwordEncoder.encode("666666"),
                     User.USER_ACTIVE, LocalDateTime.now(),
-                    new HashSet<>(List.of(new Role(RoleEnum.ROLE_USER))))));
+                    Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR))));
             User gendalf = new User("gendalf", "gendalf@white.com",
                 passwordEncoder.encode("666666"),
                 User.USER_ACTIVE, LocalDateTime.now(),
-                new HashSet<>(List.of(new Role(RoleEnum.ROLE_USER))));
+                Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN));
             log.info("Preloading " + userRepository.save(gendalf));
 
             for (int i = 0; i < 12; i++) {

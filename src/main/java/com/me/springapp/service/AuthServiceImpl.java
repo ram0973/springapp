@@ -3,7 +3,6 @@ package com.me.springapp.service;
 import com.me.springapp.exceptions.EmailAlreadyInUseException;
 import com.me.springapp.exceptions.UsernameAlreadyTakenException;
 import com.me.springapp.model.Role;
-import com.me.springapp.model.RoleEnum;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
 import com.me.springapp.security.jwt.JwtUtils;

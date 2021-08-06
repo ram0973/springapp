@@ -1,7 +1,6 @@
 package com.me.springapp.repository;
 
 import com.me.springapp.model.Role;
-import com.me.springapp.model.RoleEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
