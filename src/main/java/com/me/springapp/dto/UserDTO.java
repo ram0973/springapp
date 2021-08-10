@@ -5,7 +5,8 @@ import com.me.springapp.model.Role;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record UserSaveDTO(
+public record UserDTO(
+    int id,
     String username,
     String email,
     String password,

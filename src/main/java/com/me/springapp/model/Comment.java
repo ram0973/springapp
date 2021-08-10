@@ -1,17 +1,13 @@
 package com.me.springapp.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
-public class Comment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private int id;
+public class Comment extends BaseModel {
 
     @NotBlank
     private String body;
@@ -23,16 +19,7 @@ public class Comment {
     private Article article;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return id == comment.id && body.equals(comment.body) && Objects.equals(dateCreated, comment.dateCreated)
-            && Objects.equals(article, comment.article);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public Integer getId() {
+        return id();
     }
 }

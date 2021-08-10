@@ -10,7 +10,7 @@ public interface ArticleService {
     ResponseEntity<PagedArticlesDTO> findAll(String title, int page, int size, String[] sort);
     ResponseEntity<Article> findById(int id);
     ResponseEntity<Article> findByIdAndActive(int id);
-    ResponseEntity<Article> createArticle(Article article);
+    ResponseEntity<Article> createArticle(ArticleDTO articleDTO);
     ResponseEntity<Article> updateArticle(int id, ArticleDTO articleDTO);
     ResponseEntity<HttpStatus> deleteArticle(int id);
     ResponseEntity<PagedArticlesDTO> findAllByActive(String title, int page, int size, String[] sort);

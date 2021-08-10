@@ -79,13 +79,13 @@ public class AuthServiceImpl implements AuthService {
         Set<Role> roles = new HashSet<>();
 
         if (requestRoles == null) {
-            roles.add(new Role(RoleEnum.ROLE_USER));
+            roles.add(Role.ROLE_USER);
         } else {
             for (String role : requestRoles) {
                 switch (role) {
-                    case "admin" -> roles.add(new Role(RoleEnum.ROLE_ADMIN));
-                    case "mod" -> roles.add(new Role(RoleEnum.ROLE_MODERATOR));
-                    default -> roles.add(new Role(RoleEnum.ROLE_USER));
+                    case "admin" -> roles.add(Role.ROLE_ADMIN);
+                    case "mod" -> roles.add(Role.ROLE_MODERATOR);
+                    default -> roles.add(Role.ROLE_USER);
                 }
             }
         }

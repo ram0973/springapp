@@ -1,6 +1,7 @@
 package com.me.springapp.service;
 
 import com.me.springapp.dto.ArticleDTO;
+import com.me.springapp.dto.ArticleMapper;
 import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.exceptions.NoSuchArticleException;
 import com.me.springapp.exceptions.NoSuchUsersException;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class ArticleServiceImpl implements ArticleService, PagedEntity {
+public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
     private final ArticleRepository repository;
 
@@ -43,7 +44,7 @@ public class ArticleServiceImpl implements ArticleService, PagedEntity {
 
     @Override
     public ResponseEntity<PagedArticlesDTO> findAll(String title, int page, int size, String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntity.getSortOrders(sort)));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {
             pagedArticles = repository.findAll(pageable);
@@ -69,31 +70,29 @@ public class ArticleServiceImpl implements ArticleService, PagedEntity {
     }
 
     @Override
-    public ResponseEntity<Article> createArticle(Article article) {
+    public ResponseEntity<Article> createArticle(ArticleDTO articleDTO) {
+        Article article = ArticleMapper.INSTANCE.articleFromDto(articleDTO);
         Article savedArticle = repository.save(article);
         return new ResponseEntity<>(savedArticle, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<Article> updateArticle(int id, ArticleDTO articleDTO) {
-        Article articleToUpdate = repository.findById(id).orElseThrow(NoSuchArticleException::new);
-        articleToUpdate.setTitle(article.getTitle());
-        articleToUpdate.setExcerpt(article.getExcerpt());
-        articleToUpdate.setContent(article.getContent());
-        articleToUpdate.setActive(article.isActive());
-        articleToUpdate.setUser(article.getUser());
-        return new ResponseEntity<>(repository.save(articleToUpdate), HttpStatus.OK);
+        Article article = repository.findById(id).orElseThrow(NoSuchArticleException::new);
+        ArticleMapper.INSTANCE.updateArticleFromDto(articleDTO, article);
+        return new ResponseEntity<>(repository.save(article), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<HttpStatus> deleteArticle(int id) {
+        repository.findById(id).orElseThrow(NoSuchArticleException::new);
         repository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<PagedArticlesDTO> findAllByActive(String title, int page, int size, String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntity.getSortOrders(sort)));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {
             pagedArticles = repository.findAllByActiveIsTrue(pageable);

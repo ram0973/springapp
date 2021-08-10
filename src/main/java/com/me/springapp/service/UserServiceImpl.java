@@ -1,7 +1,9 @@
 package com.me.springapp.service;
 
+import com.me.springapp.dto.ArticleMapper;
 import com.me.springapp.dto.PagedUsersDTO;
-import com.me.springapp.exceptions.NoSuchRoleException;
+import com.me.springapp.dto.UserDTO;
+import com.me.springapp.dto.UserMapper;
 import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Role;
@@ -57,9 +59,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addRoleToUser(String userName, RoleEnum roleName) {
+    public void addRoleToUser(String userName, Role role) {
         User user = userRepository.findByUsername(userName).orElseThrow(NoSuchUserException::new);
-        Role role = roleRepository.findByName(roleName).orElseThrow(NoSuchRoleException::new);
         Set<Role> roles = user.getRoles();
         roles.add(role);
         user.setRoles(roles);
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<PagedUsersDTO> findAll(int page, int size, String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntity.getSortOrders(sort)));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<User> pagedUsers = userRepository.findAll(pageable);
         return getPagedUsersDTOResponseEntity(pagedUsers);
     }
@@ -82,7 +83,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> createUser(User user) {
+    public ResponseEntity<User> createUser(UserDTO userDTO) {
+        User user = UserMapper.INSTANCE.userFromDto(userDTO);
         User savedUser = userRepository.save(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -94,20 +96,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> updateUser(int id, User updatedUser) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new NoSuchUserException();
-        }
-        User user = userOptional.get();
-        // TODO: update fields via dto-mapper
+    public ResponseEntity<User> updateUser(int id, UserDTO userDTO) {
+        User user = userRepository.findById(id).orElseThrow(NoSuchUserException::new);
+        UserMapper.INSTANCE.updateUserFromDto(userDTO, user);
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
 
     }
 
     @Override
     public ResponseEntity<PagedUsersDTO> findAllByActive(int page, int size, String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntity.getSortOrders(sort)));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<User> pagedUsers;
         pagedUsers = userRepository.findAllByActiveIsTrue(pageable);
         return getPagedUsersDTOResponseEntity(pagedUsers);

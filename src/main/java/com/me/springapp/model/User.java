@@ -1,38 +1,31 @@
 package com.me.springapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
     @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
-public class User {
+public class User extends BaseModel {
     public static final boolean USER_ACTIVE = true;
     public static final boolean USER_DISABLED = false;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 128)
     private String username;
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 128)
     @Email
     private String email;
 
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 128)
     private String password;
 
     private boolean active;
@@ -42,12 +35,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final Set<Article> articles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnore
-    @JoinTable(name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
     public User() {
     }
@@ -61,38 +54,55 @@ public class User {
         this.roles = roles;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && active == user.active && username.equals(user.username) && email.equals(user.email)
-            && password.equals(user.password) && Objects.equals(dateCreated, user.dateCreated) &&
-            Objects.equals(articles, user.articles) && Objects.equals(roles, user.roles);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
     // Getters/Setters
 
-
-    public int getId() {
-        return id;
+    @Override
+    public Integer getId() {
+        return this.id();
     }
 
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Set<Article> getArticles() {
+        return articles;
     }
 
     public Set<Role> getRoles() {
@@ -101,9 +111,5 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public boolean isActive() {
-        return active;
     }
 }

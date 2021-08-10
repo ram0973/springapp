@@ -1,6 +1,7 @@
 package com.me.springapp.controller;
 
 import com.me.springapp.dto.PagedUsersDTO;
+import com.me.springapp.dto.UserDTO;
 import com.me.springapp.model.User;
 import com.me.springapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +42,14 @@ public class UserController {
 
     @PostMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
+        return userService.createUser(userDTO);
     }
 
     @PutMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody UserDTO userDTO) {
+        return userService.updateUser(id, userDTO);
     }
 
     @DeleteMapping("/users/{id}")

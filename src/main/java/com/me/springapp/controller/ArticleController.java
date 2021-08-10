@@ -42,8 +42,8 @@ public class ArticleController {
 
     @PostMapping("/articles")
     @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
-    public ResponseEntity<Article> createArticle(@RequestBody Article article) {
-        return articleService.createArticle(article);
+    public ResponseEntity<Article> createArticle(@RequestBody ArticleDTO articleDTO) {
+        return articleService.createArticle(articleDTO);
     }
 
     @PutMapping("/articles/{id}")
