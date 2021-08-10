@@ -1,20 +1,11 @@
 package com.me.springapp.model;
 
-import lombok.*;
-import org.hibernate.Hibernate;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "tags", uniqueConstraints = {@UniqueConstraint(columnNames = "tag")})
 public class ArticleTag {
 
@@ -37,7 +28,6 @@ public class ArticleTag {
         CascadeType.PERSIST,
         CascadeType.MERGE
     }, fetch = FetchType.LAZY)
-    @ToString.Exclude
     private Set<Article> articles;
 
     @Override

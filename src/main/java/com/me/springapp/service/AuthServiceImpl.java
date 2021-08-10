@@ -10,7 +10,7 @@ import com.me.springapp.security.payload.JwtResponse;
 import com.me.springapp.security.payload.LoginRequest;
 import com.me.springapp.security.payload.MessageResponse;
 import com.me.springapp.security.payload.SignupRequest;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,12 +27,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    AuthenticationManager authenticationManager;
-    UserRepository userRepository;
-    PasswordEncoder encoder;
-    JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
+    private final JwtUtils jwtUtils;
+
+    @Autowired
+    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository,
+                           PasswordEncoder encoder, JwtUtils jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
 
     @Override
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {

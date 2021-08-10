@@ -6,8 +6,7 @@ import com.me.springapp.model.User;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.RoleRepository;
 import com.me.springapp.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +14,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Configuration
-@RequiredArgsConstructor
-@Slf4j
 public class DBSeedConfig {
+    private static final Logger log = Logger.getLogger(DBSeedConfig.class.getName());
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public DBSeedConfig(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository,
@@ -43,8 +47,8 @@ public class DBSeedConfig {
 
             for (int i = 0; i < 12; i++) {
                 log.info("Preloading " + articleRepository.save(
-                    new Article(i, String.format("Article №%d", i), "Excerpt", "Content", null,
-                        true, LocalDateTime.now(), gendalf, null)));
+                    new Article(String.format("Article №%d", i), "Excerpt", "Content", null,
+                        true, LocalDateTime.now(), gendalf)));
             }
         };
     }

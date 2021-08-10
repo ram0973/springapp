@@ -1,8 +1,11 @@
 package com.me.springapp.security.jwt;
 
+import com.me.springapp.exceptions.CustomExceptionHandler;
 import com.me.springapp.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
-import lombok.extern.slf4j.Slf4j;
+import org.flywaydb.core.internal.logging.slf4j.Slf4jLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -10,8 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-@Slf4j
 public class JwtUtils {
+    private static final Logger log = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
     @Value("${springapp.jwtSecret}")
     private String jwtSecret;
@@ -36,6 +39,7 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String authToken) {
+
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;

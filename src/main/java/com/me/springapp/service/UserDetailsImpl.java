@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,34 +13,41 @@ import javax.transaction.Transactional;
 import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
-@Getter
 public class UserDetailsImpl implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private final int id;
+    private int id;
 
-    private final String username;
+    private String username;
 
-    private final String email;
+    private String email;
 
     @JsonIgnore
-    private final String password;
+    private String password;
 
-    private final Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities;
 
     UserRepository userRepository;
 
+    public UserDetailsImpl() {
+    }
+
+    public UserDetailsImpl(int id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
-            .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-            .collect(Collectors.toList());
+            .map(role -> new SimpleGrantedAuthority(role.toString())
+            .toList());
 
         return new UserDetailsImpl(
             user.getId(),
@@ -50,6 +55,21 @@ public class UserDetailsImpl implements UserDetails {
             user.getEmail(),
             user.getPassword(),
             authorities);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 
     @Override
@@ -70,10 +90,15 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        Optional<User> optionalUser = userRepository.findById(this.id);
-        if (optionalUser.isEmpty()) {
-            throw new NoSuchUserException();
-        }
-        return optionalUser.get().isActive();
+        User user = userRepository.findById(this.id).orElseThrow(NoSuchUserException::new);
+        return user.isActive();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
