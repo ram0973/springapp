@@ -1,4 +1,6 @@
 package com.me.springapp.dto;
 
-public record ArticleDTO() {
+public record ArticleDTO(
+
+) {
 }

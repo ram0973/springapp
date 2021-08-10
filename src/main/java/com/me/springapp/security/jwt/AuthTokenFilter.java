@@ -1,9 +1,11 @@
 package com.me.springapp.security.jwt;
 
+import com.me.springapp.exceptions.CustomExceptionHandler;
 import com.me.springapp.service.UserDetailsServiceImpl;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNullApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,15 +19,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RequiredArgsConstructor
-@Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private JwtUtils jwtUtils;
+    private static final Logger log = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
+    private JwtUtils jwtUtils;
     private UserDetailsServiceImpl userDetailsService;
 
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    @NonNull
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain)
+        throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
@@ -33,7 +36,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                    userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -53,5 +56,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    @Autowired
+    public void setJwtUtils(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
+
+    @Autowired
+    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 }

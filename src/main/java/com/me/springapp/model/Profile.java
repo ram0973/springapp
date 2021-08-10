@@ -1,18 +1,10 @@
 package com.me.springapp.model;
 
-import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 public class Profile {
 
     @Id

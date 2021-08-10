@@ -2,7 +2,6 @@ package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -12,12 +11,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,8 +42,22 @@ public class Article {
     @JoinTable(name = "articles_tags",
         joinColumns = @JoinColumn(name = "article_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    @ToString.Exclude
     private Set<ArticleTag> tags;
+
+    public Article(String title, String excerpt, String content, String image, boolean active,
+                   LocalDateTime dateCreated, User user) {
+        this.title = title;
+        this.excerpt = excerpt;
+        this.content = content;
+        this.image = image;
+        this.active = active;
+        this.dateCreated = dateCreated;
+        this.user = user;
+    }
+
+    public Article() {
+
+    }
 
     @Override
     public boolean equals(Object o) {

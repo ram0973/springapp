@@ -1,8 +1,8 @@
 package com.me.springapp.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+
+
 @ControllerAdvice
-@Slf4j
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(CustomExceptionHandler.class);
+
     @Override
     @NonNull
     protected ResponseEntity<Object> handleExceptionInternal(
@@ -56,21 +59,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new BadRequestException("Email already in use"), HttpStatus.BAD_REQUEST);
     }
 
-    @Data
-    @AllArgsConstructor
-    private static class NotFoundException {
-        private String message;
+    private record NotFoundException(String message) {
     }
 
-    @Data
-    @AllArgsConstructor
-    private static class NoContentException {
-        private String message;
+    private record NoContentException(String message) {
     }
 
-    @Data
-    @AllArgsConstructor
-    private static class BadRequestException {
-        private String message;
+    private record BadRequestException(String message) {
     }
 }

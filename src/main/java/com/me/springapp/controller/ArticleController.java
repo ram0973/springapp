@@ -1,9 +1,10 @@
 package com.me.springapp.controller;
 
+import com.me.springapp.dto.ArticleDTO;
 import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.model.Article;
 import com.me.springapp.service.ArticleService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,9 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class ArticleController {
-    private ArticleService articleService;
+
+    private final ArticleService articleService;
+
+    @Autowired
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @GetMapping("/articles")
     @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
@@ -42,8 +48,8 @@ public class ArticleController {
 
     @PutMapping("/articles/{id}")
     @PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
-    public ResponseEntity<Article> updateArticle(@PathVariable("id") int id, @RequestBody Article Article) {
-        return articleService.updateArticle(id, Article);
+    public ResponseEntity<Article> updateArticle(@PathVariable("id") int id, @RequestBody ArticleDTO articleDTO) {
+        return articleService.updateArticle(id, articleDTO);
     }
 
     @DeleteMapping("/articles/{id}")

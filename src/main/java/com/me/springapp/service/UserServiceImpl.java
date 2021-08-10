@@ -9,7 +9,7 @@ import com.me.springapp.model.RoleEnum;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.RoleRepository;
 import com.me.springapp.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +24,17 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     private ResponseEntity<PagedUsersDTO> getPagedUsersDTOResponseEntity(Page<User> pagedUsers) {
         List<User> users = pagedUsers.getContent();

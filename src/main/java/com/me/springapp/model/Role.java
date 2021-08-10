@@ -1,18 +1,10 @@
 package com.me.springapp.model;
 
-import lombok.*;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "roles", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Role {
 
@@ -25,8 +17,10 @@ public class Role {
     private RoleEnum name;
 
     @ManyToMany(mappedBy = "roles", cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @ToString.Exclude
     List<User> users;
+
+    public Role() {
+    }
 
     public Role(RoleEnum name) {
         this.name = name;
@@ -44,4 +38,6 @@ public class Role {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }

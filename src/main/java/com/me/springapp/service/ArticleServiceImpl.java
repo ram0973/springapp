@@ -1,10 +1,12 @@
 package com.me.springapp.service;
 
+import com.me.springapp.dto.ArticleDTO;
 import com.me.springapp.dto.PagedArticlesDTO;
+import com.me.springapp.exceptions.NoSuchArticleException;
 import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Article;
 import com.me.springapp.repository.ArticleRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +21,14 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService, PagedEntity {
 
     private final ArticleRepository repository;
+
+    @Autowired
+    public ArticleServiceImpl(ArticleRepository repository) {
+        this.repository = repository;
+    }
 
     private ResponseEntity<PagedArticlesDTO> getPagedArticlesDTOResponseEntity(Page<Article> pagedArticles) {
         List<Article> articles = pagedArticles.getContent();
@@ -69,20 +75,14 @@ public class ArticleServiceImpl implements ArticleService, PagedEntity {
     }
 
     @Override
-    public ResponseEntity<Article> updateArticle(int id, Article article) {
-        Optional<Article> articleOptional = repository.findById(id);
-        if (articleOptional.isPresent()) {
-            Article articleToChange = articleOptional.get();
-            articleToChange.setTitle(article.getTitle());
-            articleToChange.setExcerpt(article.getExcerpt());
-            articleToChange.setContent(article.getContent());
-            articleToChange.setActive(article.isActive());
-            articleToChange.setUser(article.getUser());
-            return new ResponseEntity<>(repository.save(articleToChange), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+    public ResponseEntity<Article> updateArticle(int id, ArticleDTO articleDTO) {
+        Article articleToUpdate = repository.findById(id).orElseThrow(NoSuchArticleException::new);
+        articleToUpdate.setTitle(article.getTitle());
+        articleToUpdate.setExcerpt(article.getExcerpt());
+        articleToUpdate.setContent(article.getContent());
+        articleToUpdate.setActive(article.isActive());
+        articleToUpdate.setUser(article.getUser());
+        return new ResponseEntity<>(repository.save(articleToUpdate), HttpStatus.OK);
     }
 
     @Override

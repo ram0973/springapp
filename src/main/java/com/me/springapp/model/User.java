@@ -1,7 +1,6 @@
 package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,17 +12,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "users", uniqueConstraints = {
     @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
 public class User {
-    public final static boolean USER_ACTIVE = true;
-    public final static boolean USER_DISABLED = false;
+    public static final boolean USER_ACTIVE = true;
+    public static final boolean USER_DISABLED = false;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,8 +40,7 @@ public class User {
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Set<Article> articles = new HashSet<>();
+    private final Set<Article> articles = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
@@ -57,8 +49,10 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public User(String username, String email, String password, boolean active, LocalDateTime dateCreated,
-                Set<Role> roles) {
+    public User() {
+    }
+
+    public User(String username, String email, String password, boolean active, LocalDateTime dateCreated, Set<Role> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -80,5 +74,36 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    // Getters/Setters
+
+
+    public int getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }
