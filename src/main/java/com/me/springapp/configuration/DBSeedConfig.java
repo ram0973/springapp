@@ -4,7 +4,6 @@ import com.me.springapp.model.Article;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.ArticleRepository;
-import com.me.springapp.repository.RoleRepository;
 import com.me.springapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,7 +27,6 @@ public class DBSeedConfig {
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository,
-                                   RoleRepository roleRepository,
                                    ArticleRepository articleRepository) {
         return args -> {
             log.info("Preloading " + userRepository.save(

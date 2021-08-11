@@ -1,6 +1,5 @@
 package com.me.springapp.service;
 
-import com.me.springapp.dto.ArticleMapper;
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
 import com.me.springapp.dto.UserMapper;
@@ -8,7 +7,6 @@ import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
-import com.me.springapp.repository.RoleRepository;
 import com.me.springapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,12 +27,10 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     private ResponseEntity<PagedUsersDTO> getPagedUsersDTOResponseEntity(Page<User> pagedUsers) {
@@ -51,11 +47,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
         return userRepository.save(user);
-    }
-
-    @Override
-    public Role saveRole(Role role) {
-        return roleRepository.save(role);
     }
 
     @Override

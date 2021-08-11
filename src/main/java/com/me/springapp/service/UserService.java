@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
     User saveUser(User user);
-    Role saveRole(Role role);
     public void addRoleToUser(String userName, Role role);
     ResponseEntity<PagedUsersDTO> findAll(int page, int size, String[] sort);
     ResponseEntity<User> findById(int id);
