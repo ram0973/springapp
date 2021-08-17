@@ -18,6 +18,9 @@ public class Comment extends BaseModel {
     @JoinColumn(name = "article_id", referencedColumnName = "id", nullable = false)
     private Article article;
 
+
+
+
     @Override
     public Integer getId() {
         return id();

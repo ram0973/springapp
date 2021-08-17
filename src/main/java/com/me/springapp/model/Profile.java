@@ -16,6 +16,10 @@ public class Profile extends BaseModel {
     @OneToOne
     private User user;
 
+
+    protected Profile() {
+    }
+
     @Override
     public Integer getId() {
         return id();

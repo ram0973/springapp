@@ -10,7 +10,6 @@ import javax.persistence.*;
 @MappedSuperclass
 // https://stackoverflow.com/a/6084701/548473
 @Access(AccessType.FIELD)
-
 public abstract class BaseModel implements Persistable<Integer> {
 
     @Id
@@ -45,5 +44,9 @@ public abstract class BaseModel implements Persistable<Integer> {
     @Override
     public int hashCode() {
         return id == null ? 0 : id;
+    }
+
+
+    protected BaseModel() {
     }
 }

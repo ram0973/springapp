@@ -24,6 +24,7 @@ public class User extends BaseModel {
     @NotBlank
     @Size(max = 128)
     @Email
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank
@@ -32,6 +33,7 @@ public class User extends BaseModel {
 
     private boolean active;
 
+    @NotBlank
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -39,12 +41,14 @@ public class User extends BaseModel {
     private final Set<Article> articles = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    public User() {
+
+    protected User() {
     }
 
     public User(String username, String email, String password, boolean active, LocalDateTime dateCreated, Set<Role> roles) {
@@ -55,8 +59,6 @@ public class User extends BaseModel {
         this.dateCreated = dateCreated;
         this.roles = roles;
     }
-
-    // Getters/Setters
 
     @Override
     public Integer getId() {

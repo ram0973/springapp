@@ -1,0 +1,65 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  security:
+    enabled: false
+server:
+  address: 0.0.0.0
+  port: 8080
+  tomcat:
+    resource:
+      allow-caching: false
+spring:
+  boot:
+    admin:
+      notify:
+        mail:
+          # Comma-delimited list of carbon copy recipient email addresses
+          cc: joe@foo.com
+          # Sender email address
+          from: '"Spring Boot Admin <noreply@foo.com>"'
+          # Comma-delimited list of recipient email addresses
+          to: alice@foo.com,bob@bar.com
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: springapp
+    url: jdbc:postgresql://127.0.0.1:5432/springapp
+    username: springapp
+  data:
+    rest:
+      #  https://docs.spring.io/spring-data/rest/docs/current/reference/html/#getting-started.basic-settings
+      basePath: /api
+      returnBodyOnCreate: true
+  devtools:
+    add-properties: true
+    restart:
+      enabled: true
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    # https://stackoverflow.com/questions/30549489/what-is-this-spring-jpa-open-in-view-true-property-in-spring-boot/48222934#48222934
+    open-in-view: false
+    properties:
+      hibernate:
+        #  http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#configurations
+        default_batch_fetch_size: 10
+        format-sql: true
+        jdbc:
+          # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
+          batch_size: 10
+    show-sql: true
+  mail:
+    host: smtp.foo.com
+    password: smtp-server-password
+    username: smtp-server-user
+springapp:
+  jwtExpirationMs: 86400000
+  jwtSecret: secretkey
+springfox:
+  documentation:
+    auto-startup: true

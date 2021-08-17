@@ -40,6 +40,7 @@ public class Article extends BaseModel {
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<ArticleTag> tags;
 
+
     public Article(String title, String excerpt, String content, String image, boolean active,
                    LocalDateTime dateCreated, User user) {
         this.title = title;
@@ -53,9 +54,6 @@ public class Article extends BaseModel {
 
     protected Article() {
     }
-
-    // Getters/Setters
-
 
     public Integer getId() {
         return id();
