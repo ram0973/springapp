@@ -1,6 +1,7 @@
 package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -44,7 +45,7 @@ public class Article extends BaseModel {
     private LocalDateTime dateCreated;
 
     @ManyToOne
-    //@JsonIgnoreProperties({"email", "password", "active"})
+    @JsonIgnoreProperties({"email", "password", "active", "dateCreated", "roles"})
     @JsonInclude
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     @Getter

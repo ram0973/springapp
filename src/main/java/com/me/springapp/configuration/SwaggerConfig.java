@@ -18,7 +18,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfo(
             "Spring REST API example",
-            "User, Article models",
+            "Springapp Swagger",
             "1.0",
             "",
             null,

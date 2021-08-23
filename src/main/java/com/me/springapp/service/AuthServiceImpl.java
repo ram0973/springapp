@@ -28,10 +28,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final PasswordEncoder encoder;
-    private final JwtUtils jwtUtils;
+    private AuthenticationManager authenticationManager;
+    private UserRepository userRepository;
+    private PasswordEncoder encoder;
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Autowired
     public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository,
