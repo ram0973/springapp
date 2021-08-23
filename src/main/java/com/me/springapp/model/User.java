@@ -1,6 +1,7 @@
 package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,43 +14,55 @@ import java.util.Set;
 @Entity
 @Table(name = "users", uniqueConstraints = {
     @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseModel {
     public static final boolean USER_ACTIVE = true;
     public static final boolean USER_DISABLED = false;
 
     @NotBlank
     @Size(max = 128)
+    @Getter
+    @Setter
     private String username;
 
     @NotBlank
     @Size(max = 128)
     @Email
     @Column(nullable = false, unique = true)
+    @Getter
+    @Setter
     private String email;
 
     @NotBlank
     @Size(max = 128)
+    @Getter
+    @Setter
     private String password;
 
+    @Getter
+    @Setter
     private boolean active;
 
-    @NotBlank
+    @Getter
+    @Setter
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private final Set<Article> articles = new HashSet<>();
+    @Getter
+    @Setter
+    private Set<Article> articles = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
         uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
+    @Getter
+    @Setter
     private Set<Role> roles;
-
-
-    protected User() {
-    }
 
     public User(String username, String email, String password, boolean active, LocalDateTime dateCreated, Set<Role> roles) {
         this.username = username;
@@ -62,58 +75,6 @@ public class User extends BaseModel {
 
     @Override
     public Integer getId() {
-        return this.id();
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public LocalDateTime getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Set<Article> getArticles() {
-        return articles;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+        return id();
     }
 }

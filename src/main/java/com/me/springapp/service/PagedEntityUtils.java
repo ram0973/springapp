@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 interface PagedEntityUtils {
-    public static Sort.Direction getSortDirection(String direction) {
+    static Sort.Direction getSortDirection(String direction) {
         if (direction.equals("asc")) {
             return Sort.Direction.ASC;
         } else if (direction.equals("desc")) {
@@ -15,7 +15,7 @@ interface PagedEntityUtils {
         return Sort.Direction.DESC;
     }
 
-    public static List<Sort.Order> getSortOrders(String[] sort) {
+    static List<Sort.Order> getSortOrders(String[] sort) {
         List<Sort.Order> orders = new ArrayList<>();
         // sorting single column
         // ?sort=column1,direction1

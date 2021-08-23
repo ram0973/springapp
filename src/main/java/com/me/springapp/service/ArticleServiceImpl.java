@@ -71,7 +71,7 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
     @Override
     public ResponseEntity<Article> createArticle(ArticleDTO articleDTO) {
-        Article article = ArticleMapper.INSTANCE.articleFromDto(articleDTO);
+        Article article = ArticleMapper.articleFromDto(articleDTO);
         Article savedArticle = repository.save(article);
         return new ResponseEntity<>(savedArticle, HttpStatus.CREATED);
     }
@@ -79,7 +79,7 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
     @Override
     public ResponseEntity<Article> updateArticle(int id, ArticleDTO articleDTO) {
         Article article = repository.findById(id).orElseThrow(NoSuchArticleException::new);
-        ArticleMapper.INSTANCE.updateArticleFromDto(articleDTO, article);
+        ArticleMapper.updateArticleFromDto(article, articleDTO);
         return new ResponseEntity<>(repository.save(article), HttpStatus.OK);
     }
 

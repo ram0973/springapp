@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<User> createUser(UserDTO userDTO) {
-        User user = UserMapper.INSTANCE.userFromDto(userDTO);
+        User user = UserMapper.userFromDto(userDTO);
         User savedUser = userRepository.save(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<User> updateUser(int id, UserDTO userDTO) {
         User user = userRepository.findById(id).orElseThrow(NoSuchUserException::new);
-        UserMapper.INSTANCE.updateUserFromDto(userDTO, user);
+        UserMapper.updateUserFromDto(user, userDTO);
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
 
     }

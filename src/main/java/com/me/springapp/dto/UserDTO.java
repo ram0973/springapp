@@ -1,17 +1,20 @@
 package com.me.springapp.dto;
 
 import com.me.springapp.model.Role;
+import lombok.Builder;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 public record UserDTO(
-    int id,
     String username,
     String email,
     String password,
     boolean active,
-    LocalDateTime dateCreated,
+    String dateCreated,
     Set<Role> roles
 ) {
+
+    @Builder
+    public UserDTO {
+    }
 }

@@ -5,6 +5,7 @@ import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,9 @@ import java.util.*;
 import java.util.logging.Logger;
 
 @Configuration
+@Slf4j
 public class DBSeedConfig {
-    private static final Logger log = Logger.getLogger(DBSeedConfig.class.getName());
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
