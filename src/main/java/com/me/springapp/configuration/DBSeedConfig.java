@@ -20,10 +20,10 @@ import java.util.logging.Logger;
 @Slf4j
 public class DBSeedConfig {
 
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DBSeedConfig(PasswordEncoder passwordEncoder) {
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 

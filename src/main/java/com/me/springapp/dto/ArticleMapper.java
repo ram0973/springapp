@@ -39,7 +39,8 @@ public class ArticleMapper {
         article.setContent(articleDTO.content());
         article.setImage(articleDTO.image());
         article.setActive(articleDTO.active());
-        article.setDateCreated(LocalDateTime.parse(articleDTO.dateCreated(), DateTimeFormatter.ofPattern(dateTimeFormat)));
+        article.setDateCreated(LocalDateTime.parse(articleDTO.dateCreated(),
+            DateTimeFormatter.ofPattern(dateTimeFormat)));
         article.setTags(articleDTO.tags());
     }
 }

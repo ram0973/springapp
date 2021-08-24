@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +18,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-@Transactional
+//@Transactional
+@Slf4j
 public class UserDetailsImpl implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,10 +35,10 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public UserDetailsImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -50,7 +53,7 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserDetailsImpl build(User user) {
+    public static UserDetailsImpl build(@NonNull User user) {
         List<SimpleGrantedAuthority> authorities = user
             .getRoles()
             .stream()
@@ -98,6 +101,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        log.info(String.valueOf(this.userRepository));
         User user = userRepository.findById(this.id).orElseThrow(NoSuchUserException::new);
         return user.isActive();
     }

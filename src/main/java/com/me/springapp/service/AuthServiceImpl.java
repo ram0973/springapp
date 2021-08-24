@@ -34,11 +34,6 @@ public class AuthServiceImpl implements AuthService {
     private JwtUtils jwtUtils;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
     public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository,
                            PasswordEncoder encoder, JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;

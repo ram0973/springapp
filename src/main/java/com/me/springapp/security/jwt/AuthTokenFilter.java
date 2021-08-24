@@ -1,10 +1,10 @@
 package com.me.springapp.security.jwt;
 
-import com.me.springapp.exceptions.CustomExceptionHandler;
+import com.me.springapp.service.UserDetailsService;
 import com.me.springapp.service.UserDetailsServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,11 +19,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private static final Logger log = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
     private JwtUtils jwtUtils;
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+
+    public void setJwtUtils(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
+
+    @Autowired
+    public void setUserDetailsService(UserDetailsServiceImpl userDetailsServiceImpl) {
+        this.userDetailsService = userDetailsServiceImpl;
+    }
 
     @NonNull
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -56,15 +67,5 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         return null;
-    }
-
-    @Autowired
-    public void setJwtUtils(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
-
-    @Autowired
-    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
     }
 }
