@@ -13,19 +13,14 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class ArticleTag extends BaseModel {
 
     @NotBlank
-    @Getter
-    @Setter
     private String tag;
 
-    @ManyToMany(mappedBy = "tags", cascade = {
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    }, fetch = FetchType.LAZY)
-    @Getter
-    @Setter
+    @ManyToMany(mappedBy = "tags", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Article> articles;
 
     @Override

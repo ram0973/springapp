@@ -17,42 +17,32 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class User extends BaseModel {
     public static final boolean USER_ACTIVE = true;
     public static final boolean USER_DISABLED = false;
 
     @NotBlank
     @Size(max = 128)
-    @Getter
-    @Setter
     private String username;
 
     @NotBlank
     @Size(max = 128)
     @Email
     @Column(nullable = false, unique = true)
-    @Getter
-    @Setter
     private String email;
 
     @NotBlank
     @Size(max = 128)
-    @Getter
-    @Setter
     private String password;
 
-    @Getter
-    @Setter
     private boolean active;
 
-    @Getter
-    @Setter
     private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    @Getter
-    @Setter
     private Set<Article> articles = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
@@ -60,18 +50,7 @@ public class User extends BaseModel {
         uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
-    @Getter
-    @Setter
     private Set<Role> roles;
-
-    public User(String username, String email, String password, boolean active, LocalDateTime dateCreated, Set<Role> roles) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.active = active;
-        this.dateCreated = dateCreated;
-        this.roles = roles;
-    }
 
     @Override
     public Integer getId() {

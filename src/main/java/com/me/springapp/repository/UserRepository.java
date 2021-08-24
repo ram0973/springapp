@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     // HQL query example

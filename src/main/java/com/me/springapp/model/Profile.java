@@ -10,21 +10,17 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Profile extends BaseModel {
 
     @Size(max = 100)
-    @Getter
-    @Setter
     private String firstName;
 
     @Size(max = 100)
-    @Getter
-    @Setter
     private String lastName;
 
     @OneToOne
-    @Getter
-    @Setter
     private User user;
 
     @Override

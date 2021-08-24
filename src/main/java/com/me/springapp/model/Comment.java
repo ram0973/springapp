@@ -12,21 +12,17 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Comment extends BaseModel {
 
     @NotBlank
-    @Getter
-    @Setter
     private String body;
 
-    @Getter
-    @Setter
     private LocalDateTime dateCreated;
 
     @ManyToOne
     @JoinColumn(name = "article_id", referencedColumnName = "id", nullable = false)
-    @Getter
-    @Setter
     private Article article;
 
     @Override

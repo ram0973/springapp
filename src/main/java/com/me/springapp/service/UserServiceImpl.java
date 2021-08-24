@@ -8,6 +8,7 @@ import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,15 +24,11 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-@Transactional
+//@Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
 
     private ResponseEntity<PagedUsersDTO> getPagedUsersDTOResponseEntity(Page<User> pagedUsers) {
         List<User> users = pagedUsers.getContent();

@@ -1,6 +1,7 @@
 package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.lang.NonNull;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @MappedSuperclass
 // https://stackoverflow.com/a/6084701/548473
 @Access(AccessType.FIELD)
+@NoArgsConstructor
 public abstract class BaseModel implements Persistable<Integer> {
 
     @Id
@@ -45,9 +47,5 @@ public abstract class BaseModel implements Persistable<Integer> {
     @Override
     public int hashCode() {
         return id == null ? 0 : id;
-    }
-
-
-    protected BaseModel() {
     }
 }

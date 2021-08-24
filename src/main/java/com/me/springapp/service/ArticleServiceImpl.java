@@ -7,6 +7,7 @@ import com.me.springapp.exceptions.NoSuchArticleException;
 import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Article;
 import com.me.springapp.repository.ArticleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,14 +23,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
     private final ArticleRepository repository;
-
-    @Autowired
-    public ArticleServiceImpl(ArticleRepository repository) {
-        this.repository = repository;
-    }
 
     private ResponseEntity<PagedArticlesDTO> getPagedArticlesDTOResponseEntity(Page<Article> pagedArticles) {
         List<Article> articles = pagedArticles.getContent();
