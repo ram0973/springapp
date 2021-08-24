@@ -60,14 +60,14 @@ spring:
     host: smtp.foo.com
     password: smtp-server-password
     username: smtp-server-user
-  #security:
-  #  user:
-  #    name: user
-  #    password: user
 
 springapp:
   jwtExpirationMs: 86400000
   jwtSecret: secretkey
-springfox:
-  documentation:
-    auto-startup: true
+
+#springfox:
+#  documentation:
+#    auto-startup: true
+
+springdoc:
+  show-actuator: true

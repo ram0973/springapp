@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-//@Transactional
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
