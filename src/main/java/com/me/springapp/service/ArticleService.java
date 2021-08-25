@@ -13,5 +13,6 @@ public interface ArticleService {
     ResponseEntity<Article> createArticle(ArticleDTO articleDTO);
     ResponseEntity<Article> updateArticle(int id, ArticleDTO articleDTO);
     ResponseEntity<HttpStatus> deleteArticle(int id);
+    ResponseEntity<HttpStatus> softDeleteArticle(int id);
     ResponseEntity<PagedArticlesDTO> findAllByActive(String title, int page, int size, String[] sort);
 }

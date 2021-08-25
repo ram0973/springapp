@@ -1,5 +1,6 @@
 package com.me.springapp.repository;
 
+import com.me.springapp.model.ModelState;
 import com.me.springapp.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,8 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    // HQL query example
     @RestResource(rel = "by-email", path = "by-email")
+    // HQL query example
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
     Optional<User> findByEmailIgnoreCase(String email);
 
@@ -38,4 +39,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @NonNull
     Page<User> findAllByActiveIsTrue(@NonNull Pageable pageable);
+
+    Page<User> findAllByState(@NonNull Pageable pageable, ModelState state);
 }

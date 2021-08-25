@@ -1,6 +1,8 @@
 logging:
   level:
+    root: WARN
     web: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
 
 management:
   endpoints:
@@ -39,6 +41,12 @@ spring:
     add-properties: true
     restart:
       enabled: true
+  jackson:
+    visibility:
+      field: any
+      getter: none
+      setter: none
+      is-getter: none
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
@@ -60,6 +68,11 @@ spring:
     host: smtp.foo.com
     password: smtp-server-password
     username: smtp-server-user
+  security:
+    user:
+      name: user@acme.com
+      password: password
+      roles: USER
 
 springapp:
   jwtExpirationMs: 86400000

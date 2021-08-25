@@ -53,6 +53,12 @@ public class ArticleController {
         return articleService.deleteArticle(id);
     }
 
+    @DeleteMapping("/articles/soft/{id}")
+    //@PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
+    public ResponseEntity<HttpStatus> softDeleteArticle(@PathVariable("id") int id) {
+        return articleService.softDeleteArticle(id);
+    }
+
     @GetMapping("/articles/active/{id}")
     public ResponseEntity<Article> getArticleByIdAndActive(@PathVariable("id") int id) {
         return articleService.findByIdAndActive(id);

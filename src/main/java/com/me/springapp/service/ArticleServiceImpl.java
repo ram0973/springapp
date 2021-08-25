@@ -6,9 +6,9 @@ import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.exceptions.NoSuchArticleException;
 import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.Article;
+import com.me.springapp.model.ModelState;
 import com.me.springapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
-    private final ArticleRepository repository;
+    private final ArticleRepository articleRepository;
 
     private ResponseEntity<PagedArticlesDTO> getPagedArticlesDTOResponseEntity(Page<Article> pagedArticles) {
         List<Article> articles = pagedArticles.getContent();
@@ -44,9 +44,9 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {
-            pagedArticles = repository.findAll(pageable);
+            pagedArticles = articleRepository.findAll(pageable);
         } else {
-            pagedArticles = repository.findAllByTitleContaining(title, pageable);
+            pagedArticles = articleRepository.findAllByTitleContaining(title, pageable);
         }
         if (pagedArticles.getContent().isEmpty()) {
             throw new NoSuchUsersException();
@@ -56,34 +56,41 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
     @Override
     public ResponseEntity<Article> findById(int id) {
-        Optional<Article> article = repository.findById(id);
+        Optional<Article> article = articleRepository.findById(id);
         return ResponseEntity.of(article);
     }
 
     @Override
     public ResponseEntity<Article> findByIdAndActive(int id) {
-        Optional<Article> article = repository.findByIdAndActiveIsTrue(id);
+        Optional<Article> article = articleRepository.findByIdAndActiveIsTrue(id);
         return ResponseEntity.of(article);
     }
 
     @Override
     public ResponseEntity<Article> createArticle(ArticleDTO articleDTO) {
         Article article = ArticleMapper.articleFromDto(articleDTO);
-        Article savedArticle = repository.save(article);
+        Article savedArticle = articleRepository.save(article);
         return new ResponseEntity<>(savedArticle, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<Article> updateArticle(int id, ArticleDTO articleDTO) {
-        Article article = repository.findById(id).orElseThrow(NoSuchArticleException::new);
+        Article article = articleRepository.findById(id).orElseThrow(NoSuchArticleException::new);
         ArticleMapper.updateArticleFromDto(article, articleDTO);
-        return new ResponseEntity<>(repository.save(article), HttpStatus.OK);
+        return new ResponseEntity<>(articleRepository.save(article), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<HttpStatus> deleteArticle(int id) {
-        repository.findById(id).orElseThrow(NoSuchArticleException::new);
-        repository.deleteById(id);
+        articleRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> softDeleteArticle(int id) {
+        Article article = articleRepository.findById(id).orElseThrow(NoSuchArticleException::new);
+        article.setState(ModelState.DELETED);
+        articleRepository.save(article);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -92,9 +99,9 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {
-            pagedArticles = repository.findAllByActiveIsTrue(pageable);
+            pagedArticles = articleRepository.findAllByActiveIsTrue(pageable);
         } else {
-            pagedArticles = repository.findAllByTitleContainingAndActiveIsTrue(title, pageable);
+            pagedArticles = articleRepository.findAllByTitleContainingAndActiveIsTrue(title, pageable);
         }
         return getPagedArticlesDTOResponseEntity(pagedArticles);
     }

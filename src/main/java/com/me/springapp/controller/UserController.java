@@ -55,6 +55,12 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
+    @DeleteMapping("/users/soft/{id}")
+    //@PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<HttpStatus> softDeleteUser(@PathVariable("id") int id) {
+        return userService.softDeleteUser(id);
+    }
+
     @GetMapping("/users/active")
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PagedUsersDTO> findAllByActive(

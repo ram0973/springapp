@@ -26,8 +26,9 @@
 6. Посмотреть что можно взять из JHipster
 7. ~~Конфигурации запуска dev, staging, prod~~
 8. Миграции
-9. ~~Разобраться с Jpa Buddy~~
+9. Разобраться с Jpa Buddy
 10. https://www.testcontainers.org/
+11. Soft delete
 
 Внимание: приложение не готово к production среде, и использованные решения могут быть ошибочными/небезопасными.
 
@@ -157,6 +158,11 @@ docker-compose up
 # Production
 docker-compose -f docker-compose.yml up
 ```
+## API
+Главная страница API - /api
+
+## Hal Explorer
+HAL Explorer /api/explorer
 
 ## Тестовые запросы к Rest API можно делать с Postman, примеры:
 Регистрация:

@@ -1,6 +1,7 @@
 package com.me.springapp.configuration;
 
 import com.me.springapp.model.Article;
+import com.me.springapp.model.ModelState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.ArticleRepository;
@@ -28,22 +29,23 @@ public class DBSeedConfig {
                                    ArticleRepository articleRepository) {
         return args -> {
             log.info("Preloading " + userRepository.save(
-                new User("bilbo", "bilbo@baggins.com", passwordEncoder.encode("666666"),
-                    User.USER_ACTIVE, LocalDateTime.now(), null,
-                    Set.of(Role.ROLE_USER))));
+                new User(ModelState.ACTIVE, LocalDateTime.now(), "bilbo", "bilbo@baggins.com",
+                    passwordEncoder.encode("666666"),true, null, Set.of(Role.ROLE_USER))));
             log.info("Preloading " + userRepository.save(
-                new User("frodo", "frodo@baggins.com", passwordEncoder.encode("666666"),
-                    User.USER_ACTIVE, LocalDateTime.now(), null,
+                new User(ModelState.ACTIVE, LocalDateTime.now(), "frodo", "frodo@baggins.com",
+                    passwordEncoder.encode("666666"), true, null,
                     Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR))));
-            User gendalf = new User("gendalf", "gendalf@white.com",
-                passwordEncoder.encode("666666"), User.USER_ACTIVE, LocalDateTime.now(),
-                null, Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN));
+            User gendalf = new User(ModelState.ACTIVE, LocalDateTime.now(), "gendalf", "gendalf@white.com",
+                passwordEncoder.encode("666666"), true,null,
+                Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN));
             log.info("Preloading " + userRepository.save(gendalf));
 
             for (int i = 0; i < 12; i++) {
                 log.info("Preloading " + articleRepository.save(
-                    new Article(String.format("Article №%d", i), "Excerpt", "Content", null,
-                        true, LocalDateTime.now(), gendalf, null)));
+                    // TODO: remove base constructor on migrations implement
+                    new Article(ModelState.ACTIVE, LocalDateTime.now(), String.format("Article №%d", i),
+                        "Excerpt", "Content", null,
+                        true,  gendalf, null)));
             }
         };
     }

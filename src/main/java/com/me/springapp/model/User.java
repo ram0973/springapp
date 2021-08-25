@@ -2,6 +2,7 @@ package com.me.springapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,9 +15,8 @@ import java.util.Set;
 @Entity
 @Table(name = "users", uniqueConstraints = {
     @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
-@Builder
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class User extends BaseModel {
@@ -35,11 +35,10 @@ public class User extends BaseModel {
 
     @NotBlank
     @Size(max = 128)
+    @JsonIgnore
     private String password;
 
     private boolean active;
-
-    private LocalDateTime dateCreated;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -55,5 +54,16 @@ public class User extends BaseModel {
     @Override
     public Integer getId() {
         return id();
+    }
+
+    public User(ModelState state, LocalDateTime dateCreated, String username, String email, String password,
+                boolean active, Set<Article> articles, Set<Role> roles) {
+        super(state, dateCreated);
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.active = active;
+        this.articles = articles;
+        this.roles = roles;
     }
 }

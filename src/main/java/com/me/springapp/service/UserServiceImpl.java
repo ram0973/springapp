@@ -3,8 +3,11 @@ package com.me.springapp.service;
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
 import com.me.springapp.dto.UserMapper;
+import com.me.springapp.exceptions.NoSuchArticleException;
 import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.exceptions.NoSuchUsersException;
+import com.me.springapp.model.Article;
+import com.me.springapp.model.ModelState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
@@ -84,6 +87,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<HttpStatus> softDeleteUser(int id) {
+        User user = userRepository.findById(id).orElseThrow(NoSuchArticleException::new);
+        user.setState(ModelState.DELETED);
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<User> updateUser(int id, UserDTO userDTO) {
         User user = userRepository.findById(id).orElseThrow(NoSuchUserException::new);
         UserMapper.updateUserFromDto(user, userDTO);
@@ -96,6 +107,14 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<User> pagedUsers;
         pagedUsers = userRepository.findAllByActiveIsTrue(pageable);
+        return getPagedUsersDTOResponseEntity(pagedUsers);
+    }
+
+    @Override
+    public ResponseEntity<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
+        Page<User> pagedUsers;
+        pagedUsers = userRepository.findAllByState(pageable, state);
         return getPagedUsersDTOResponseEntity(pagedUsers);
     }
 }
