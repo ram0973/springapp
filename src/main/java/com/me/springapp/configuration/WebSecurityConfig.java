@@ -30,11 +30,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //            //.antMatchers("**").permitAll();
 //    }
-@Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-            .passwordEncoder(NoOpPasswordEncoder.getInstance())
-            .withUser("user").password("password").roles("USER").and()
-            .withUser("admin").password("password").roles("USER","ADMIN");
+//@Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication()
+//            .passwordEncoder(NoOpPasswordEncoder.getInstance())
+//            .withUser("user").password("password").roles("USER").and()
+//            .withUser("admin").password("password").roles("USER","ADMIN");
+//    }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+            .anyRequest().authenticated()
+            .and()
+            .formLogin()
+            .and()
+            .httpBasic();
     }
 }
