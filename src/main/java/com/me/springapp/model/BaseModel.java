@@ -33,6 +33,7 @@ public abstract class BaseModel implements Persistable<Integer> {
 
     @Getter
     @Setter
+    @CreationTimestamp
     private LocalDateTime dateCreated;
 
     // doesn't work for hibernate lazy proxy

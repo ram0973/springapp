@@ -41,12 +41,12 @@ spring:
     add-properties: true
     restart:
       enabled: true
-  jackson:
-    visibility:
-      field: any
-      getter: none
-      setter: none
-      is-getter: none
+#  jackson:
+#    visibility:
+#      field: any
+#      getter: none
+#      setter: none
+#      is-getter: none
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
