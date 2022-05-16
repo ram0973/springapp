@@ -28,7 +28,7 @@ public class SpringdocConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**/*.html")
+        registry.addResourceHandler("/*/*.html")
             .addResourceLocations("classpath:/META-INF/resources/webjars/")
             .resourceChain(false)
             .addResolver(new WebJarsResourceResolver())

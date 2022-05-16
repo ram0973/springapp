@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-openjdk-debian:16.0.2-7 AS base
+FROM bellsoft/liberica-openjdk-debian:18.0.1-12 AS base
 LABEL maintainer="ram0973@gmail.com"
 WORKDIR /app
 COPY .mvn/ .mvn
@@ -15,7 +15,7 @@ CMD ["./mvnw", "spring-boot:run"]
 FROM base as build
 RUN ./mvnw package
 
-FROM bellsoft/liberica-openjdk-debian:16.0.2-7 AS  production
+FROM base AS  production
 COPY --from=build /app/target/*.jar /spring-app.jar
 RUN adduser --system springapp
 USER springapp
