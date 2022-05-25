@@ -1,0 +1,16 @@
+---
+# Use: `docker-compose -f docker-compose-psql up`
+
+
+version: "3.8"
+services:
+  postgresql-service:
+    container_name: springapp-postgres-prod
+    restart: unless-stopped
+    env_file:
+      - ./src/main/resources/.env
+    ports:
+      - "5432:5432"
+    build:
+      context: .
+      dockerfile: ./docker/postgresql/Dockerfile
