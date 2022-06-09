@@ -25,20 +25,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findById(int id);
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByIdAndState(int id, ModelState state);
 
-    @RestResource(rel = "by-username", path = "by-username")
-    List<User> findByUsernameContainingIgnoreCase(String username);
-
-    Boolean existsByUsername(String username);
-
-    Boolean existsByEmail(String email);
+    Boolean existsByEmailIgnoreCase(String email);
 
     @NonNull
     Page<User> findAll(@NonNull Pageable pageable);
-
-    @NonNull
-    Page<User> findAllByActiveIsTrue(@NonNull Pageable pageable);
 
     Page<User> findAllByState(@NonNull Pageable pageable, ModelState state);
 }

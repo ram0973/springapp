@@ -61,8 +61,8 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
     }
 
     @Override
-    public ResponseEntity<Article> findByIdAndActive(int id) {
-        Optional<Article> article = articleRepository.findByIdAndActiveIsTrue(id);
+    public ResponseEntity<Article> findByIdAndState(int id, ModelState state) {
+        Optional<Article> article = articleRepository.findByIdAndState(id, state);
         return ResponseEntity.of(article);
     }
 
@@ -89,19 +89,20 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
     @Override
     public ResponseEntity<HttpStatus> softDeleteArticle(int id) {
         Article article = articleRepository.findById(id).orElseThrow(NoSuchArticleException::new);
-        article.setState(ModelState.DELETED);
+        article.setState(ModelState.SOFT_DELETED);
         articleRepository.save(article);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<PagedArticlesDTO> findAllByActive(String title, int page, int size, String[] sort) {
+    public ResponseEntity<PagedArticlesDTO> findAllByState(String title, int page, int size,
+                                                           String[] sort, ModelState state) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {
-            pagedArticles = articleRepository.findAllByActiveIsTrue(pageable);
+            pagedArticles = articleRepository.findAllByState(state, pageable);
         } else {
-            pagedArticles = articleRepository.findAllByTitleContainingAndActiveIsTrue(title, pageable);
+            pagedArticles = articleRepository.findAllByTitleContainingAndState(title, state, pageable);
         }
         return getPagedArticlesDTOResponseEntity(pagedArticles);
     }

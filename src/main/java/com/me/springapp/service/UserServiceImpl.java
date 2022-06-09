@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addRoleToUser(String userName, Role role) {
-        User user = userRepository.findByUsername(userName).orElseThrow(NoSuchUserException::new);
+    public void addRoleToUser(String email, Role role) {
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
         Set<Role> roles = user.getRoles();
         roles.add(role);
         user.setRoles(roles);
@@ -66,8 +66,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
+        Page<User> pagedUsers;
+        pagedUsers = userRepository.findAllByState(pageable, state);
+        return getPagedUsersDTOResponseEntity(pagedUsers);
+    }
+
+    @Override
     public ResponseEntity<User> findById(int id) {
         Optional<User> user = userRepository.findById(id);
+        return user
+            .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+            .orElseThrow(NoSuchUserException::new);
+    }
+
+    @Override
+    public ResponseEntity<User> findByIdAndState(int id, ModelState state) {
+        Optional<User> user = userRepository.findByIdAndState(id, state);
         return user
             .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
             .orElseThrow(NoSuchUserException::new);
@@ -89,7 +105,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<HttpStatus> softDeleteUser(int id) {
         User user = userRepository.findById(id).orElseThrow(NoSuchArticleException::new);
-        user.setState(ModelState.DELETED);
+        user.setState(ModelState.SOFT_DELETED);
         userRepository.save(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -100,21 +116,5 @@ public class UserServiceImpl implements UserService {
         UserMapper.updateUserFromDto(user, userDTO);
         return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
 
-    }
-
-    @Override
-    public ResponseEntity<PagedUsersDTO> findAllByActive(int page, int size, String[] sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
-        Page<User> pagedUsers;
-        pagedUsers = userRepository.findAllByActiveIsTrue(pageable);
-        return getPagedUsersDTOResponseEntity(pagedUsers);
-    }
-
-    @Override
-    public ResponseEntity<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
-        Page<User> pagedUsers;
-        pagedUsers = userRepository.findAllByState(pageable, state);
-        return getPagedUsersDTOResponseEntity(pagedUsers);
     }
 }

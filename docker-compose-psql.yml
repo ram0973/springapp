@@ -1,7 +1,6 @@
 ---
 # Use: `docker-compose -f docker-compose-psql up`
 
-
 version: "3.8"
 services:
   postgresql-service:

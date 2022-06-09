@@ -1,9 +1,6 @@
 package com.me.springapp.configuration;
 
-import com.me.springapp.model.Article;
-import com.me.springapp.model.ModelState;
-import com.me.springapp.model.Role;
-import com.me.springapp.model.User;
+import com.me.springapp.model.*;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -29,23 +25,23 @@ public class DBSeedConfig {
                                    ArticleRepository articleRepository) {
         return args -> {
             log.info("Preloading " + userRepository.save(
-                new User(ModelState.ACTIVE, LocalDateTime.now(), "bilbo", "bilbo@baggins.com",
-                    passwordEncoder.encode("666666"),true, null, Set.of(Role.ROLE_USER))));
+                new User(ModelState.ENABLED, LocalDateTime.now(), "bilbo@baggins.com",
+                    passwordEncoder.encode("666666"), null, Set.of(Role.ROLE_USER),
+                    PasswordCipher.BCRYPT)));
             log.info("Preloading " + userRepository.save(
-                new User(ModelState.ACTIVE, LocalDateTime.now(), "frodo", "frodo@baggins.com",
-                    passwordEncoder.encode("666666"), true, null,
-                    Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR))));
-            User gendalf = new User(ModelState.ACTIVE, LocalDateTime.now(), "gendalf", "gendalf@white.com",
-                passwordEncoder.encode("666666"), true,null,
-                Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN));
+                new User(ModelState.ENABLED, LocalDateTime.now(), "frodo@baggins.com",
+                    passwordEncoder.encode("666666"), null,
+                    Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR), PasswordCipher.BCRYPT)));
+            User gendalf = new User(ModelState.ENABLED, LocalDateTime.now(), "gendalf@white.com",
+                passwordEncoder.encode("666666"), null,
+                Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN), PasswordCipher.BCRYPT);
             log.info("Preloading " + userRepository.save(gendalf));
 
             for (int i = 0; i < 12; i++) {
                 log.info("Preloading " + articleRepository.save(
                     // TODO: remove base constructor on migrations implement
-                    new Article(ModelState.ACTIVE, LocalDateTime.now(), String.format("Article №%d", i),
-                        "Excerpt", "Content", null,
-                        true,  gendalf, null)));
+                    new Article(ModelState.ENABLED, LocalDateTime.now(), String.format("Article №%d", i),
+                        "Excerpt", "Content", null,  gendalf, null)));
             }
         };
     }

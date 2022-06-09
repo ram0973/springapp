@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 public abstract class BaseModel implements Persistable<Integer> {
 
     @Id
+    @Getter
     @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
@@ -67,8 +68,8 @@ public abstract class BaseModel implements Persistable<Integer> {
         return id == null ? 0 : id;
     }
 
-    public BaseModel(ModelState state, LocalDateTime dateCreated) {
-        this.state = state;
+    public BaseModel(ModelState modelState, LocalDateTime dateCreated) {
+        this.state = modelState;
         this.dateCreated = dateCreated;
     }
 }

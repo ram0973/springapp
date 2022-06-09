@@ -11,11 +11,11 @@ public class ArticleMapper {
 
     public static ArticleDTO articleToDto(Article article) {
         return ArticleDTO.builder()
+            .modelState(article.getState())
             .title(article.getTitle())
             .excerpt(article.getExcerpt())
             .content(article.getContent())
             .image(article.getImage())
-            .active(article.isActive())
             .dateCreated(article.getDateCreated().format(DateTimeFormatter.ofPattern(dateTimeFormat)))
             .tags(article.getTags())
             .build();
@@ -23,11 +23,11 @@ public class ArticleMapper {
 
     public static Article articleFromDto(ArticleDTO articleDTO) {
         return Article.builder()
+            .state(articleDTO.modelState())
             .title(articleDTO.title())
             .excerpt(articleDTO.excerpt())
             .content(articleDTO.content())
             .image(articleDTO.image())
-            .active(articleDTO.active())
             .dateCreated(LocalDateTime.parse(articleDTO.dateCreated(), DateTimeFormatter.ofPattern(dateTimeFormat)))
             .tags(articleDTO.tags())
             .build();
@@ -38,7 +38,7 @@ public class ArticleMapper {
         article.setExcerpt(articleDTO.excerpt());
         article.setContent(articleDTO.content());
         article.setImage(articleDTO.image());
-        article.setActive(articleDTO.active());
+        article.setState(articleDTO.modelState());
         article.setDateCreated(LocalDateTime.parse(articleDTO.dateCreated(),
             DateTimeFormatter.ofPattern(dateTimeFormat)));
         article.setTags(articleDTO.tags());

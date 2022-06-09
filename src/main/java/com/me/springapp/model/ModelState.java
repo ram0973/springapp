@@ -1,7 +1,5 @@
 package com.me.springapp.model;
 
 public enum ModelState {
-    INACTIVE,
-    ACTIVE,
-    DELETED
+    ENABLED, EXPIRED, LOCKED, SOFT_DELETED
 }

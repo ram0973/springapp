@@ -31,8 +31,6 @@ public class Article extends BaseModel {
 
     private String image;
 
-    private boolean active = false;
-
     @ManyToOne
     @JsonIgnoreProperties({"email", "password", "active", "dateCreated", "roles"})
     @JsonInclude
@@ -52,13 +50,12 @@ public class Article extends BaseModel {
     }
 
     public Article(ModelState state, LocalDateTime dateCreated, String title, String excerpt, String content,
-                   String image, boolean active, User user, Set<ArticleTag> tags) {
+                   String image, User user, Set<ArticleTag> tags) {
         super(state, dateCreated);
         this.title = title;
         this.excerpt = excerpt;
         this.content = content;
         this.image = image;
-        this.active = active;
         this.user = user;
         this.tags = tags;
     }

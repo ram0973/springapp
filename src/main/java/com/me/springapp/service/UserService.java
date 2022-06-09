@@ -12,11 +12,11 @@ public interface UserService {
     User saveUser(User user);
     void addRoleToUser(String userName, Role role);
     ResponseEntity<PagedUsersDTO> findAll(int page, int size, String[] sort);
+    ResponseEntity<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state);
     ResponseEntity<User> findById(int id);
+    ResponseEntity<User> findByIdAndState(int id, ModelState state);
     ResponseEntity<User> createUser(UserDTO userDTO);
     ResponseEntity<User> updateUser(int id, UserDTO userDTO);
     ResponseEntity<HttpStatus> deleteUser(int id);
     ResponseEntity<HttpStatus> softDeleteUser(int id);
-    ResponseEntity<PagedUsersDTO> findAllByActive(int page, int size, String[] sort);
-    ResponseEntity<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state);
 }

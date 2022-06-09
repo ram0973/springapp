@@ -2,13 +2,12 @@ package com.me.springapp.controller;
 
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
+import com.me.springapp.model.ModelState;
 import com.me.springapp.model.User;
 import com.me.springapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 //TODO: check this
@@ -55,7 +54,7 @@ public class UserController {
         return userService.deleteUser(id);
     }
 
-    @DeleteMapping("/users/soft/{id}")
+    @DeleteMapping("/users/soft-delete/{id}")
     //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> softDeleteUser(@PathVariable("id") int id) {
         return userService.softDeleteUser(id);
@@ -68,6 +67,6 @@ public class UserController {
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id,desc") String[] sort
     ) {
-        return userService.findAllByActive(page, size, sort);
+        return userService.findAllByState(page, size, sort, ModelState.ENABLED);
     }
 }

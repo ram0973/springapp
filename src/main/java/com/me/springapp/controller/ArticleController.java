@@ -3,6 +3,7 @@ package com.me.springapp.controller;
 import com.me.springapp.dto.ArticleDTO;
 import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.model.Article;
+import com.me.springapp.model.ModelState;
 import com.me.springapp.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,7 +54,7 @@ public class ArticleController {
         return articleService.deleteArticle(id);
     }
 
-    @DeleteMapping("/articles/soft/{id}")
+    @DeleteMapping("/articles/soft-delete/{id}")
     //@PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> softDeleteArticle(@PathVariable("id") int id) {
         return articleService.softDeleteArticle(id);
@@ -61,7 +62,7 @@ public class ArticleController {
 
     @GetMapping("/articles/active/{id}")
     public ResponseEntity<Article> getArticleByIdAndActive(@PathVariable("id") int id) {
-        return articleService.findByIdAndActive(id);
+        return articleService.findByIdAndState(id, ModelState.ENABLED);
     }
 
     @GetMapping("/articles/active")
@@ -71,6 +72,6 @@ public class ArticleController {
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id,desc") String[] sort
     ) {
-        return articleService.findAllByActive(title, page, size, sort);
+        return articleService.findAllByState(title, page, size, sort, ModelState.ENABLED);
     }
 }

@@ -16,17 +16,14 @@ import java.util.Optional;
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Optional<Article> findById(int id);
 
-    Optional<Article> findByIdAndActiveIsTrue(int id);
-
+    Optional<Article> findByIdAndState(int id, ModelState state);
     @NonNull
     Page<Article> findAll(@NonNull Pageable pageable);
 
     Page<Article> findAllByTitleContaining(String title, Pageable pageable);
 
-    Page<Article> findAllByActiveIsTrue(Pageable pageable);
-
-    Page<Article> findAllByTitleContainingAndActiveIsTrue(String title, Pageable pageable);
-
     Page<Article> findAllByState(ModelState state, Pageable pageable);
+
+    Page<Article> findAllByTitleContainingAndState(String title, ModelState state, Pageable pageable);
 }
 

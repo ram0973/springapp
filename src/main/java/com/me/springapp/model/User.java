@@ -13,19 +13,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email")})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 @SuperBuilder
 @NoArgsConstructor
 @Getter
 @Setter
 public class User extends BaseModel {
-    public static final boolean USER_ACTIVE = true;
-    public static final boolean USER_DISABLED = false;
-
-    @NotBlank
-    @Size(max = 128)
-    private String username;
 
     @NotBlank
     @Size(max = 128)
@@ -38,8 +31,6 @@ public class User extends BaseModel {
     @JsonIgnore
     private String password;
 
-    private boolean active;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Article> articles = new HashSet<>();
@@ -51,19 +42,16 @@ public class User extends BaseModel {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @Override
-    public Integer getId() {
-        return id();
-    }
+    @Enumerated(EnumType.STRING)
+    private PasswordCipher cipher;
 
-    public User(ModelState state, LocalDateTime dateCreated, String username, String email, String password,
-                boolean active, Set<Article> articles, Set<Role> roles) {
+    public User(ModelState state, LocalDateTime dateCreated, String email, String password,
+                Set<Article> articles, Set<Role> roles, PasswordCipher cipher) {
         super(state, dateCreated);
-        this.username = username;
         this.email = email;
         this.password = password;
-        this.active = active;
         this.articles = articles;
         this.roles = roles;
+        this.cipher = cipher;
     }
 }
