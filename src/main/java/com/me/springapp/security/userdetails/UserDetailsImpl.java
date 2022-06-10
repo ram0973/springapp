@@ -1,9 +1,10 @@
-package com.me.springapp.security;
+package com.me.springapp.security.userdetails;
 
 import com.me.springapp.model.ModelState;
 import com.me.springapp.model.User;
-import lombok.Getter;
+import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,19 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
-@Service
+
 @Transactional
 public class UserDetailsImpl implements UserDetails {
+
+    private final User user;
 
     public UserDetailsImpl(User user) {
         this.user = user;
     }
 
-    @Getter
-    private final User user;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.name())).toList();
     }
 

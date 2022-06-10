@@ -68,8 +68,8 @@ spring:
     host: smtp.foo.com
     password: smtp-server-password
     username: smtp-server-user
-  main:
-    allow-circular-references: true
+  #main:
+  #  allow-circular-references: true
   security:
     user:
       name: user@acme.com

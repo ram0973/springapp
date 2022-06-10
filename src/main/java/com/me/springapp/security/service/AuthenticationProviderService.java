@@ -1,32 +1,27 @@
 package com.me.springapp.security.service;
 
-import com.me.springapp.security.UserDetailsImpl;
+import com.me.springapp.exceptions.NoSuchUsersException;
+import com.me.springapp.model.User;
+import com.me.springapp.repository.UserRepository;
+import com.me.springapp.security.userdetails.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import static com.me.springapp.model.PasswordCipher.BCRYPT;
-import static com.me.springapp.model.PasswordCipher.SCRYPT;
-
 @Service
-public class AuthenticationProviderService  implements AuthenticationProvider {
-
-
-    @Autowired
-    private UserDetailsService userDetailsService;
+public class AuthenticationProviderService implements AuthenticationProvider {
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @Autowired
-    private SCryptPasswordEncoder sCryptPasswordEncoder;
+    private UserRepository userRepository;
 
     private Authentication checkPassword(UserDetailsImpl user,
                                          String rawPassword,
@@ -45,12 +40,11 @@ public class AuthenticationProviderService  implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByEmail(email);
-        switch (userDetails.getUser().getCipher()) {
-            case BCRYPT:
-                return checkPassword(userDetails, password, bCryptPasswordEncoder);
-            case SCRYPT:
-                return checkPassword(userDetails, password, sCryptPasswordEncoder);
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(NoSuchUsersException::new);
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        Authentication resultAuthentication = checkPassword(userDetails, password, passwordEncoder);
+        if (resultAuthentication.isAuthenticated()) {
+            return resultAuthentication;
         }
         throw new BadCredentialsException("Bad credentials");
     }

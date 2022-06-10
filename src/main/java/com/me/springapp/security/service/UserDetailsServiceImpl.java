@@ -1,14 +1,16 @@
 package com.me.springapp.security.service;
 
 import com.me.springapp.model.User;
-import com.me.springapp.security.UserDetailsImpl;
 import com.me.springapp.repository.UserRepository;
-import com.me.springapp.security.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -18,16 +20,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(
-            () -> new UsernameNotFoundException("User Not Found with email: " + email));
-        return new UserDetailsImpl(user);
+        return loadUserByEmail(email);
     }
 
-    @Override
     @Transactional
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(
             () -> new UsernameNotFoundException("User Not Found with email: " + email));
-        return new UserDetailsImpl(user);
+        Collection<SimpleGrantedAuthority> roles =
+            user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.toString())).toList();
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), roles);
     }
 }

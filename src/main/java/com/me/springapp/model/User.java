@@ -42,16 +42,12 @@ public class User extends BaseModel {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @Enumerated(EnumType.STRING)
-    private PasswordCipher cipher;
-
     public User(ModelState state, LocalDateTime dateCreated, String email, String password,
-                Set<Article> articles, Set<Role> roles, PasswordCipher cipher) {
+                Set<Article> articles, Set<Role> roles) {
         super(state, dateCreated);
         this.email = email;
         this.password = password;
         this.articles = articles;
         this.roles = roles;
-        this.cipher = cipher;
     }
 }
