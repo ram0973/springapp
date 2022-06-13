@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -39,23 +40,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new AuthenticationProviderService());
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors();
         http.csrf().disable(); // JWT
-        http.formLogin().usernameParameter("email");//.disable();
+        http.formLogin().usernameParameter("email").disable();
         //http.logout().disable();
-        //http.httpBasic().disable();
+        http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-            .mvcMatchers("/", "/error", "/api/auth/*", "/api/test/*").permitAll()
-            .anyRequest().permitAll();
+            .mvcMatchers("/", "/error", "/api/auth/**", "/api/test/**").permitAll()
+            .anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter());
     }
 }
