@@ -1,5 +1,6 @@
 package com.me.springapp.security.service;
 
+import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationProviderService implements AuthenticationProvider {
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -40,7 +42,7 @@ public class AuthenticationProviderService implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(NoSuchUsersException::new);
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         Authentication resultAuthentication = checkPassword(userDetails, password, passwordEncoder);
         if (resultAuthentication.isAuthenticated()) {

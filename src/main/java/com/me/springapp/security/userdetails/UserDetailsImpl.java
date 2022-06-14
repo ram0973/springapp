@@ -25,7 +25,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.name())).toList();
     }
 
@@ -51,7 +50,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; //TODO password expired
+        return true;
     }
 
     @Override

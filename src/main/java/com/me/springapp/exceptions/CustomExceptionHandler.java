@@ -46,11 +46,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new NoContentException("There is no users"), HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(UsernameAlreadyTakenException.class)
-    protected ResponseEntity<BadRequestException> handleUsernameAlreadyTakenException() {
-        return new ResponseEntity<>(new BadRequestException("Username already taken"), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(EmailAlreadyInUseException.class)
     protected ResponseEntity<BadRequestException> handleEmailAlreadyInUseException() {
         return new ResponseEntity<>(new BadRequestException("Email already in use"), HttpStatus.BAD_REQUEST);

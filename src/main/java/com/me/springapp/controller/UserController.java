@@ -3,15 +3,18 @@ package com.me.springapp.controller;
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
 import com.me.springapp.model.ModelState;
+import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-//TODO: check this
-@CrossOrigin(origins = "*")
+import static com.me.springapp.model.Role.ROLE_ADMIN;
+
+//@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -20,13 +23,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PagedUsersDTO> getArticles(
         @RequestParam(required = false) String title,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(defaultValue = "id,desc") String[] sort
     ) {
+
         return userService.findAll(page, size, sort);
     }
 
