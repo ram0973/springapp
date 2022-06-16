@@ -11,8 +11,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.time.Instant;
 
 @Configuration
 @EnableGlobalAuthentication
@@ -34,15 +41,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors();
         http.csrf()
-            .ignoringAntMatchers("/api/auth/login")
+            //.ignoringAntMatchers("/api/auth/login")
             .disable(); // JWT
-        http.formLogin().usernameParameter("email").disable();
+        http.formLogin()
+            //.usernameParameter("email")
+            .disable();
         http.logout().disable();
         http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
             .mvcMatchers("/", "/error", "/api/auth/**", "/api/test/**").permitAll()
             .anyRequest().authenticated();
-        http.addFilterBefore(new JwtOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+        //http.addFilterBefore(new JwtOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        http.exceptionHandling((exceptions) -> exceptions
+            .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+            .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
     }
 }
