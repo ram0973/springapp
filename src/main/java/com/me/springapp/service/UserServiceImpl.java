@@ -6,13 +6,11 @@ import com.me.springapp.dto.UserMapper;
 import com.me.springapp.exceptions.NoSuchArticleException;
 import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.exceptions.NoSuchUsersException;
-import com.me.springapp.model.Article;
 import com.me.springapp.model.ModelState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -82,6 +80,11 @@ public class UserServiceImpl implements UserService {
         return user
             .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
             .orElseThrow(NoSuchUserException::new);
+    }
+
+    @Override
+    public Optional<User> findUserByEmailIgnoreCase(String email) {
+        return userRepository.findByEmailIgnoreCase(email);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.me.springapp.configuration;
 
-import com.me.springapp.security.filter.JwtOncePerRequestFilter;
+import com.me.springapp.security.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -13,13 +13,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.time.Instant;
 
 @Configuration
 @EnableGlobalAuthentication
@@ -30,7 +26,10 @@ import java.time.Instant;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;
+
+    @Autowired
+    private final JwtFilter jwtFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -50,10 +49,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-            .mvcMatchers("/", "/error", "/api/auth/**", "/api/test/**").permitAll()
+            .mvcMatchers("/", "/error", "/api/test/**", "/api/auth/login", "/api/auth/token").permitAll()
             .anyRequest().authenticated();
+        http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         //http.addFilterBefore(new JwtOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+        //http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         http.exceptionHandling((exceptions) -> exceptions
             .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
             .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));

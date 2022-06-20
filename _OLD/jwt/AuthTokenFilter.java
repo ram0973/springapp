@@ -1,6 +1,5 @@
 package com.me.springapp.security.jwt;
 
-import com.me.springapp.exceptions.InvalidJWT;
 import com.me.springapp.security.service.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

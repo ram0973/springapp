@@ -1,84 +1,71 @@
 package com.me.springapp.security.service;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.me.springapp.exceptions.EmailAlreadyInUseException;
-import com.me.springapp.exceptions.NoSuchUsersException;
+import com.me.springapp.exceptions.NoSuchUserException;
+import com.me.springapp.exceptions.WrongEmailOrPasswordException;
 import com.me.springapp.model.ModelState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
-import com.me.springapp.repository.UserRepository;
-import com.me.springapp.security.dto.LoginRequestDTO;
-import com.me.springapp.security.dto.SignupRequestDTO;
-import com.me.springapp.security.dto.TokensDTO;
+import com.me.springapp.security.dto.*;
+import com.me.springapp.security.model.JwtAuthentication;
+import com.me.springapp.security.provider.JwtProvider;
+import com.me.springapp.service.UserService;
+import io.jsonwebtoken.Claims;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthServiceImpl implements com.me.springapp.security.service.AuthService {
     private final AuthenticationProvider authenticationProvider;
-
-    private final UserRepository userRepository;
-
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final String jwtSecret;
+    private final JwtProvider jwtProvider;
 
     @Autowired
-    public AuthServiceImpl(AuthenticationProvider authenticationProvider, UserRepository userRepository,
-                           @Value("${springapp.jwtSecret}") String jwtSecret, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthenticationProvider authenticationProvider,
+                           UserService userService,
+                           @Value("${springapp.jwtSecret}") String jwtSecret,
+                           PasswordEncoder passwordEncoder,
+                           JwtProvider jwtProvider) {
         this.authenticationProvider = authenticationProvider;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.jwtSecret = jwtSecret;
         this.passwordEncoder = passwordEncoder;
+        this.jwtProvider = jwtProvider;
     }
 
-    @Override
-    public ResponseEntity<?> loginUser(LoginRequestDTO loginRequest) {
-        Authentication authentication = authenticationProvider.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
-        if (authentication == null) {
-            log.error("Authentication object is null");
-            throw new RuntimeException("Authentication object is null");
+    private final Map<String, String> refreshStorage = new HashMap<>();
+
+    public JwtResponseDTO login(@NonNull JwtRequestDTO authRequest) {
+        final User user = userService.findUserByEmailIgnoreCase(authRequest.getEmail())
+            .orElseThrow(NoSuchUserException::new);
+        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
+            final String accessToken = jwtProvider.generateAccessToken(user);
+            final String refreshToken = jwtProvider.generateRefreshToken(user);
+            refreshStorage.put(user.getEmail(), refreshToken);
+            return new JwtResponseDTO(accessToken, refreshToken);
+        } else {
+            throw new WrongEmailOrPasswordException();
         }
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = userRepository.findByEmailIgnoreCase(authentication.getName()).orElseThrow(NoSuchUsersException::new);
-
-        Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
-        String accessToken = JWT.create()
-            .withSubject(user.getEmail())
-            .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-            .withClaim("roles", user.getRoles().stream().map(Enum::name).toList())
-            .sign(algorithm);
-
-        String refreshToken = JWT.create()
-            .withSubject(user.getEmail())
-            .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-            .withClaim("roles", user.getRoles().stream().map(Enum::name).toList())
-            .sign(algorithm);
-
-        var payload = new TokensDTO(accessToken, refreshToken);
-        return ResponseEntity.ok().body(payload);
     }
 
     @Override
     public ResponseEntity<?> registerUser(SignupRequestDTO signUpRequest) {
-        if (userRepository.existsByEmailIgnoreCase(signUpRequest.email())) {
-            throw new EmailAlreadyInUseException();
-        }
+        userService.findUserByEmailIgnoreCase(signUpRequest.email()).orElseThrow(EmailAlreadyInUseException::new);
         Set<Role> roles = new HashSet<>() {{
             add(Role.ROLE_USER);
         }};
@@ -89,7 +76,43 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
             passwordEncoder.encode(signUpRequest.password()),
             null,
             roles);
-        userRepository.save(user);
+        userService.saveUser(user);
         return ResponseEntity.ok("User registered successfully");
+    }
+
+    public JwtResponseDTO getAccessToken(@NonNull String refreshToken) {
+        if (jwtProvider.validateRefreshToken(refreshToken)) {
+            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
+            final String email = claims.getSubject();
+            final String savedRefreshToken = refreshStorage.get(email);
+            if (savedRefreshToken != null && savedRefreshToken.equals(refreshToken)) {
+                final User user = userService.findUserByEmailIgnoreCase(email)
+                    .orElseThrow(NoSuchUserException::new);
+                final String accessToken = jwtProvider.generateAccessToken(user);
+                return new JwtResponseDTO(accessToken, null);
+            }
+        }
+        return new JwtResponseDTO(null, null);
+    }
+
+    public JwtResponseDTO refresh(@NonNull String refreshToken) {
+        if (jwtProvider.validateRefreshToken(refreshToken)) {
+            final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
+            final String email = claims.getSubject();
+            final String saveRefreshToken = refreshStorage.get(email);
+            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
+                final User user = userService.findUserByEmailIgnoreCase(email)
+                    .orElseThrow(NoSuchUserException::new);
+                final String accessToken = jwtProvider.generateAccessToken(user);
+                final String newRefreshToken = jwtProvider.generateRefreshToken(user);
+                refreshStorage.put(user.getEmail(), newRefreshToken);
+                return new JwtResponseDTO(accessToken, newRefreshToken);
+            }
+        }
+        throw new RuntimeException("Invalid JWT token");
+    }
+
+    public JwtAuthentication getAuthInfo() {
+        return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
     }
 }

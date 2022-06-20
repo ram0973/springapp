@@ -81,6 +81,11 @@ springapp:
   jwtExpirationMs: 86400000
   jwtSecret: secretkey
 
+jwt:
+  secret:
+    access: supermegasecret
+    refresh: supermegarefreshsecret
+
 #springfox:
 #  documentation:
 #    auto-startup: true

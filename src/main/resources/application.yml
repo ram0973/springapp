@@ -1,4 +1,3 @@
 spring:
   profiles:
-    activate:
-      on-profile: "dev"
+    active: dev

@@ -6,13 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -29,6 +31,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             log.debug("An exception {} occurred, which will cause a {} response", ex.getLocalizedMessage(), status);
         }
         return super.handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    @ExceptionHandler(WrongEmailOrPasswordException.class)
+    protected ResponseEntity<BadCredentialsException> handleWrongEmailOrPasswordException() {
+        return new ResponseEntity<>(new BadCredentialsException("Bad credentials"),
+            HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(NoSuchUserException.class)
@@ -49,6 +57,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EmailAlreadyInUseException.class)
     protected ResponseEntity<BadRequestException> handleEmailAlreadyInUseException() {
         return new ResponseEntity<>(new BadRequestException("Email already in use"), HttpStatus.BAD_REQUEST);
+    }
+
+    private record BadCredentialsException(String message) {
+
     }
 
     private record NotFoundException(String message) {
