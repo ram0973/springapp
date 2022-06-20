@@ -17,7 +17,7 @@ public class SpringdocConfig implements WebMvcConfigurer {
     @Bean
     public OpenAPI customOpenAPI(@Value("1.0") String appVersion) {
         return new OpenAPI().info(new Info()
-                .title("Rest HATEOAS app API")
+                .title("Rest HATEOAS application API")
                 .version("1.0")
                 .description("This is a sample Spring application")
                 .termsOfService("http://swagger.io/terms/")

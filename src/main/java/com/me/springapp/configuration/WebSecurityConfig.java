@@ -49,13 +49,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-            .mvcMatchers("/", "/error", "/api/test/**", "/api/auth/login", "/api/auth/token").permitAll()
-            .anyRequest().authenticated();
+            .mvcMatchers("/", "/error", "/api/test/**", "/api/auth/login", "/api/auth/token", "/swagger-ui/**")
+            .permitAll()
+            .anyRequest().permitAll();
         http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         //http.addFilterBefore(new JwtOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class);
         //http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        http.exceptionHandling((exceptions) -> exceptions
-            .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-            .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
+        //http.exceptionHandling((exceptions) -> exceptions
+        //    .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+        //    .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
     }
 }

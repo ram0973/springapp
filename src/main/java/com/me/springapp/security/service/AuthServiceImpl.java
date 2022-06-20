@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
             refreshStorage.put(user.getEmail(), refreshToken);
             return new JwtResponseDTO(accessToken, refreshToken);
         } else {
-            throw new WrongEmailOrPasswordException();
+            throw new BadCredentialsException("Bad credentials");
         }
     }
 
