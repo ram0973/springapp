@@ -2,7 +2,6 @@ package com.me.springapp.security.service;
 
 import com.me.springapp.exceptions.EmailAlreadyInUseException;
 import com.me.springapp.exceptions.NoSuchUserException;
-import com.me.springapp.exceptions.WrongEmailOrPasswordException;
 import com.me.springapp.model.ModelState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
@@ -23,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -51,21 +51,21 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
 
     private final Map<String, String> refreshStorage = new HashMap<>();
 
-    public JwtResponseDTO login(@NonNull JwtRequestDTO authRequest) {
-        final User user = userService.findUserByEmailIgnoreCase(authRequest.getEmail())
+    public TokensResponseDTO login(@Valid LoginRequestDTO authRequest) {
+        final User user = userService.findUserByEmailIgnoreCase(authRequest.email())
             .orElseThrow(NoSuchUserException::new);
-        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(authRequest.password(), user.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getEmail(), refreshToken);
-            return new JwtResponseDTO(accessToken, refreshToken);
+            return new TokensResponseDTO(accessToken, refreshToken);
         } else {
             throw new BadCredentialsException("Bad credentials");
         }
     }
 
     @Override
-    public ResponseEntity<?> registerUser(SignupRequestDTO signUpRequest) {
+    public ResponseEntity<String> signup(@NonNull SignupRequestDTO signUpRequest) {
         userService.findUserByEmailIgnoreCase(signUpRequest.email()).orElseThrow(EmailAlreadyInUseException::new);
         Set<Role> roles = new HashSet<>() {{
             add(Role.ROLE_USER);
@@ -81,7 +81,7 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
         return ResponseEntity.ok("User registered successfully");
     }
 
-    public JwtResponseDTO getAccessToken(@NonNull String refreshToken) {
+    public TokensResponseDTO getAccessToken(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String email = claims.getSubject();
@@ -90,13 +90,13 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
                 final User user = userService.findUserByEmailIgnoreCase(email)
                     .orElseThrow(NoSuchUserException::new);
                 final String accessToken = jwtProvider.generateAccessToken(user);
-                return new JwtResponseDTO(accessToken, null);
+                return new TokensResponseDTO(accessToken, null);
             }
         }
-        return new JwtResponseDTO(null, null);
+        return new TokensResponseDTO(null, null);
     }
 
-    public JwtResponseDTO refresh(@NonNull String refreshToken) {
+    public TokensResponseDTO refresh(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String email = claims.getSubject();
@@ -107,7 +107,7 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getEmail(), newRefreshToken);
-                return new JwtResponseDTO(accessToken, newRefreshToken);
+                return new TokensResponseDTO(accessToken, newRefreshToken);
             }
         }
         throw new RuntimeException("Invalid JWT token");

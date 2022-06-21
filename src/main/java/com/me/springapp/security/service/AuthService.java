@@ -2,17 +2,17 @@ package com.me.springapp.security.service;
 
 
 import com.me.springapp.security.dto.*;
-import com.me.springapp.security.dto.LoginRequestDTO;
 import com.me.springapp.security.model.JwtAuthentication;
 import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 
-import javax.security.auth.message.AuthException;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 public interface AuthService {
-    JwtResponseDTO login(@NonNull JwtRequestDTO authRequest);
-    ResponseEntity<?> registerUser(SignupRequestDTO signUpRequestDTO);
-    JwtResponseDTO getAccessToken(@NonNull String refreshToken);
-    JwtResponseDTO refresh(@NonNull String refreshToken);
+    TokensResponseDTO login(LoginRequestDTO authRequest);
+    ResponseEntity<String> signup(SignupRequestDTO signUpRequestDTO);
+    TokensResponseDTO getAccessToken(@NonNull @NotBlank String refreshToken);
+    TokensResponseDTO refresh(@NonNull @NotBlank String refreshToken);
     JwtAuthentication getAuthInfo();
 }

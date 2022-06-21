@@ -5,6 +5,8 @@ import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
 import com.me.springapp.security.userdetails.UserDetailsImpl;
+import com.me.springapp.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,14 +19,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationProviderService implements AuthenticationProvider {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
     private Authentication checkPassword(UserDetailsImpl user,
                                          String rawPassword,
                                          PasswordEncoder encoder) {
@@ -42,7 +40,7 @@ public class AuthenticationProviderService implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
+        User user = userService.findUserByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         Authentication resultAuthentication = checkPassword(userDetails, password, passwordEncoder);
         if (resultAuthentication.isAuthenticated()) {

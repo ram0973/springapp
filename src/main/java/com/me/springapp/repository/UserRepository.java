@@ -17,20 +17,13 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
-
     @RestResource(rel = "by-email", path = "by-email")
     // HQL query example
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
     Optional<User> findByEmailIgnoreCase(String email);
-
     Optional<User> findById(int id);
-
     Optional<User> findByIdAndState(int id, ModelState state);
-
     Boolean existsByEmailIgnoreCase(String email);
-
-    @NonNull
-    Page<User> findAll(@NonNull Pageable pageable);
-
+    @NonNull Page<User> findAll(@NonNull Pageable pageable);
     Page<User> findAllByState(@NonNull Pageable pageable, ModelState state);
 }

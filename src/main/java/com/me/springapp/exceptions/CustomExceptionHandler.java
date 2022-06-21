@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 
@@ -33,12 +34,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
 
-    @ExceptionHandler(WrongEmailOrPasswordException.class)
-    protected ResponseEntity<BadCredentialsException> handleWrongEmailOrPasswordException() {
-        return new ResponseEntity<>(new BadCredentialsException("Bad credentials"),
-            HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(NoSuchUserException.class)
     protected ResponseEntity<NotFoundException> handleThereIsNoSuchUserException() {
         return new ResponseEntity<>(new NotFoundException("There is no such user"), HttpStatus.NOT_FOUND);
@@ -57,10 +52,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EmailAlreadyInUseException.class)
     protected ResponseEntity<BadRequestException> handleEmailAlreadyInUseException() {
         return new ResponseEntity<>(new BadRequestException("Email already in use"), HttpStatus.BAD_REQUEST);
-    }
-
-    private record BadCredentialsException(String message) {
-
     }
 
     private record NotFoundException(String message) {
