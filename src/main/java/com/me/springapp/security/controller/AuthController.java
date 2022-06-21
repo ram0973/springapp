@@ -8,10 +8,13 @@ import com.me.springapp.security.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 //@CrossOrigin(origins = "*")
 @RequestMapping("/api/auth")
@@ -22,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody JwtRequestDTO authRequest) {
+    public ResponseEntity<JwtResponseDTO> login(@RequestBody @Valid JwtRequestDTO authRequest) {
         final JwtResponseDTO token = authService.login(authRequest);
         return ResponseEntity.ok(token);
     }

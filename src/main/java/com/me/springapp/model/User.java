@@ -33,7 +33,7 @@ public class User extends BaseModel {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Article> articles = new HashSet<>();
+    private Set<Article> articles;
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
