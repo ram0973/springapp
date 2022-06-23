@@ -11,7 +11,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,9 +20,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // HQL query example
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
     Optional<User> findByEmailIgnoreCase(String email);
+
     Optional<User> findById(int id);
+
     Optional<User> findByIdAndState(int id, ModelState state);
+
     Boolean existsByEmailIgnoreCase(String email);
-    @NonNull Page<User> findAll(@NonNull Pageable pageable);
+
+    @NonNull
+    Page<User> findAll(@NonNull Pageable pageable);
+
     Page<User> findAllByState(@NonNull Pageable pageable, ModelState state);
 }

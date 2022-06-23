@@ -3,9 +3,7 @@ package com.me.springapp.service;
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
 import com.me.springapp.dto.UserMapper;
-import com.me.springapp.exceptions.NoSuchArticleException;
 import com.me.springapp.exceptions.NoSuchUserException;
-import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.ModelState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
@@ -15,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +30,19 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private ResponseEntity<PagedUsersDTO> getPagedUsersDTOResponseEntity(Page<User> pagedUsers) {
+    private Optional<PagedUsersDTO> getPagedUsersDTOResponseEntity(Page<User> pagedUsers) {
         List<User> users = pagedUsers.getContent();
         if (users.isEmpty()) {
-            throw new NoSuchUsersException();
+            return Optional.empty();
         } else {
-            PagedUsersDTO response = new PagedUsersDTO(users, pagedUsers.getNumber(),
-                pagedUsers.getTotalElements(), pagedUsers.getTotalPages());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            PagedUsersDTO pagedUsersDTO = new PagedUsersDTO(users, pagedUsers.getNumber(), pagedUsers.getTotalElements(), pagedUsers.getTotalPages());
+            return Optional.of(pagedUsersDTO);
         }
     }
 
     @Override
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public Optional<User> saveUser(User user) {
+        return Optional.of(userRepository.save(user));
     }
 
     @Override
@@ -60,14 +55,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<PagedUsersDTO> findAll(int page, int size, String[] sort) {
+    public Optional<PagedUsersDTO> findAll(int page, int size, String[] sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<User> pagedUsers = userRepository.findAll(pageable);
         return getPagedUsersDTOResponseEntity(pagedUsers);
     }
 
     @Override
-    public ResponseEntity<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state) {
+    public Optional<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<User> pagedUsers;
         pagedUsers = userRepository.findAllByState(pageable, state);
@@ -75,11 +70,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> findById(int id) {
-        Optional<User> user = userRepository.findById(id);
-        return user
-            .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseThrow(NoSuchUserException::new);
+    public Optional<User> findById(int id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -88,39 +80,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> findByIdAndState(int id, ModelState state) {
-        Optional<User> user = userRepository.findByIdAndState(id, state);
-        return user
-            .map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseThrow(NoSuchUserException::new);
+    public Optional<User> findByIdAndState(int id, ModelState state) {
+        return userRepository.findByIdAndState(id, state);
     }
 
     @Override
-    public ResponseEntity<User> createUser(UserDTO userDTO) {
+    public Optional<User> createUser(UserDTO userDTO) {
         User user = UserMapper.userFromDto(userDTO);
-        User savedUser = userRepository.save(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return Optional.of(userRepository.save(user));
     }
 
     @Override
-    public ResponseEntity<HttpStatus> deleteUser(int id) {
+    public void deleteUser(int id) {
         userRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<HttpStatus> softDeleteUser(int id) {
-        User user = userRepository.findById(id).orElseThrow(NoSuchArticleException::new);
+    public Optional<User> softDeleteUser(int id) {
+        User user = userRepository.findById(id).orElseThrow(NoSuchUserException::new);
         user.setState(ModelState.SOFT_DELETED);
-        userRepository.save(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return Optional.of(userRepository.save(user));
     }
 
     @Override
-    public ResponseEntity<User> updateUser(int id, UserDTO userDTO) {
+    public Optional<User> updateUser(int id, UserDTO userDTO) {
         User user = userRepository.findById(id).orElseThrow(NoSuchUserException::new);
         UserMapper.updateUserFromDto(user, userDTO);
-        return new ResponseEntity<>(userRepository.save(user), HttpStatus.OK);
-
+        return Optional.of(userRepository.save(user));
     }
 }

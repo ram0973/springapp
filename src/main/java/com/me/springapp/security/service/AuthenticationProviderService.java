@@ -1,21 +1,16 @@
 package com.me.springapp.security.service;
 
 import com.me.springapp.exceptions.NoSuchUserException;
-import com.me.springapp.exceptions.NoSuchUsersException;
 import com.me.springapp.model.User;
-import com.me.springapp.repository.UserRepository;
 import com.me.springapp.security.userdetails.UserDetailsImpl;
 import com.me.springapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationProviderService implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+
     private Authentication checkPassword(UserDetailsImpl user,
                                          String rawPassword,
                                          PasswordEncoder encoder) {

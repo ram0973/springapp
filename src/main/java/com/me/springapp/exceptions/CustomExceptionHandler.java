@@ -1,37 +1,50 @@
 package com.me.springapp.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestControllerAdvice
 @Slf4j
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+public class CustomExceptionHandler {
 
-    @Override
-    @NonNull
-    protected ResponseEntity<Object> handleExceptionInternal(
-        @NonNull Exception ex, @Nullable Object body, @NonNull HttpHeaders headers, HttpStatus status,
-        @NonNull WebRequest request) {
-        if (status.is5xxServerError()) {
-            log.error("An 5xx exception {} occurred, which will cause a {} response", ex.getLocalizedMessage(), status);
-        } else if (status.is4xxClientError()) {
-            log.warn("An 4xx exception {} occurred, which will cause a {} response", ex.getLocalizedMessage(), status);
-        } else {
-            log.debug("An exception {} occurred, which will cause a {} response", ex.getLocalizedMessage(), status);
-        }
-        return super.handleExceptionInternal(ex, body, headers, status, request);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ValidationErrorResponse onMethodArgumentNotValidException(
+        MethodArgumentNotValidException e
+    ) {
+        final List<FieldViolation> fieldViolations = e.getBindingResult().getFieldErrors().stream()
+            .map(error -> new FieldViolation(error.getField(), error.getDefaultMessage()))
+            .collect(Collectors.toList());
+        return new ValidationErrorResponse(fieldViolations);
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    protected ResponseEntity<NotFoundException> handleEmptyResultDataAccessException(EmptyResultDataAccessException e) {
+        log.trace("Record not found: {}", e.getMessage());
+        return new ResponseEntity<>(new NotFoundException(String.format("Record not found : %s", e.getMessage())),
+            HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchArticleException.class)
+    protected ResponseEntity<NotFoundException> handleThereIsNoSuchArticleException() {
+        return new ResponseEntity<>(new NotFoundException("There is no such article"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NoSuchArticlesException.class)
+    protected ResponseEntity<NotFoundException> handleThereIsNoSuchArticlesException() {
+        return new ResponseEntity<>(new NotFoundException("There is no such articles"), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NoSuchUserException.class)
@@ -63,3 +76,4 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     private record BadRequestException(String message) {
     }
 }
+

@@ -12,6 +12,9 @@ management:
 
 server:
   address: 0.0.0.0
+  #error:
+  #  include-messages: always
+  #  include-binding-errors: always
   port: 8080
   tomcat:
     resource:
@@ -41,12 +44,12 @@ spring:
     add-properties: true
     restart:
       enabled: true
-#  jackson:
-#    visibility:
-#      field: any
-#      getter: none
-#      setter: none
-#      is-getter: none
+  #  jackson:
+  #    visibility:
+  #      field: any
+  #      getter: none
+  #      setter: none
+  #      is-getter: none
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
@@ -75,11 +78,6 @@ spring:
       name: user@acme.com
       password: password
       roles: USER
-
-springapp:
-  jwtCookieName: springapp
-  jwtExpirationMs: 86400000
-  jwtSecret: secretkey
 
 jwt:
   secret:

@@ -7,9 +7,11 @@
 которое будет получать данные из REST API. Приложение не должно переусложняться, как JHipster.
 
 Что реализовано:
+
 1. Пользователи (модель User) c JWT-авторизацией - роли (Role, Role Enum) - админ, модератор, пользователь
 2. Простейшая статья (Article)
 3. Для статей работает постраничная разбивка с сортировкой. Примеры:
+
 ```
 /api/articles/active?page=0&size=3&sort=published,desc&sort=title,asc
 /api/articles/active?page=0&size=3&sort=published,desc&sort=title,asc&sort=published,desc
@@ -33,6 +35,7 @@
 Внимание: приложение не готово к production среде, и использованные решения могут быть ошибочными/небезопасными.
 
 ## Требования (в чём тестировалось)
+
 0. Ubuntu 20.04.2 или WSL
 1. Java JDK 16
 2. Maven 3.8.1
@@ -44,6 +47,7 @@
 Список приложений можно получить командой sdk list
 
 Установка Java 16 JDK (Ubuntu 20.04/WSL) + Maven 3.8.1
+
 ```shell
 sudo apt install zip unzip
 wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
@@ -65,12 +69,14 @@ java --version
 mvn --version
 ```
 
-
 Установка Postgresql 12:
+
 ```shell
 sudo apt install postgresql-12 -y
 ```
+
 Пример настройки базы:
+
 ```shell
 sudo -u postgres psql
 postgres= create database springapp;
@@ -81,19 +87,25 @@ postgres= \q
 ```
 
 ## Загрузка исходного кода
+
 ```shell
 git clone https://github.com/ram0973/springapp
 cd springapp
 ```
+
 ## Настройки приложения
+
 Настройки лежат в src/main/resources/application.properties
 Если нужно сменить среду выполнения, нужно поменять в этом файле свойство spring.profiles.active на нужное
+
 ##
 
 ## Запуск приложения из исходников
+
 $ mvn spring-boot:run
 
 ## Создание jar и запуск приложения
+
 ```shell
 mvn package && java -jar target/*.jar
 
@@ -112,7 +124,9 @@ mvn package && java -jar target/*.jar
 chmod +x target/*.jar
 target/*.jar
 ````
+
 ### Управление jar с помощью systemd:
+
 ```
 Создать скрипт myapp.service в /etc/systemd/system:
 
@@ -131,6 +145,7 @@ WantedBy=multi-user.target
 ```
 
 ### Запуск приложения с помощью Docker - отдельные контейнеры:
+
 ```shell
 # Запуск приложения в dev среде, без отдельной docker сети:
 
@@ -151,21 +166,28 @@ docker build . -f ./docker/postgresql/Dockerfile -t psqldb:latest
 docker run --network host -e POSTGRES_PASSWORD=postgres psqldb:latest #
 mvn spring-boot:run
 ```
+
 ### Запуск приложения с помощью Docker compose:
+
 ```shell
 # Development
 docker-compose up
 # Production
 docker-compose -f docker-compose.yml up
 ```
+
 ## API
+
 Главная страница API - /api
 
 ## Hal Explorer
+
 HAL Explorer /api/explorer
 
 ## Тестовые запросы к Rest API можно делать с Postman, примеры:
+
 Регистрация:
+
 ```
 POST http://localhost:8080/api/auth/signup
 Body: RAW JSON
@@ -175,7 +197,9 @@ Body: RAW JSON
     "password": "123456",
 }
 ```
+
 Вход:
+
 ```
 POST http://localhost:8080/api/auth/login
 Body: RAW JSON
@@ -194,22 +218,25 @@ Body: RAW JSON
     "tokenType": "Bearer"
 }
 ```
+
 Список пользователей (защищённое api):
+
 ```
 GET http://localhost:8080/api/users
 Authorization - Bearer token - взять из ответа который выдается при логине
 ```
+
 Список активных статей (открытое api):
+
 ```
 GET http://localhost:8080/api/articles/active
 ```
-## Документация (Swagger)
 
+## Документация (Swagger)
 
 Документация по Api в формате JSON: /v3/api-docs
 
 Swagger главный интерфейс: /swagger-ui.html
-
 
 ## Spring Boot Actuator
 

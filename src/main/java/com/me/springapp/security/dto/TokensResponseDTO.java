@@ -9,5 +9,6 @@ public record TokensResponseDTO(
     @NotBlank @NotNull String accessToken,
     @NotBlank @NotNull String refreshToken) {
     @Builder
-    public TokensResponseDTO {}
+    public TokensResponseDTO {
+    }
 }

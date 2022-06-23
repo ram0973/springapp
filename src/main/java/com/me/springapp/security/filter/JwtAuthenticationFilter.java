@@ -18,6 +18,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -29,9 +30,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
         throws IOException, ServletException {
-        final String token = getTokenFromRequest((HttpServletRequest) request);
-        if (token != null && jwtProvider.validateAccessToken(token)) {
-            final Claims claims = jwtProvider.getAccessClaims(token);
+        final Optional<String> token = this.getTokenFromRequest((HttpServletRequest) request);
+        if (token.isPresent() && jwtProvider.validateAccessToken(token.get())) {
+            final Claims claims = jwtProvider.getAccessClaims(token.get());
             final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
             jwtInfoToken.setAuthenticated(true);
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
@@ -39,13 +40,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
+    private Optional<String> getTokenFromRequest(HttpServletRequest request) {
         final String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String JWT_PREFIX = "Bearer ";
+        String JWT_PREFIX = "BEARER ";
         if (StringUtils.hasText(bearer) && bearer.startsWith(JWT_PREFIX)) {
-            return bearer.substring(JWT_PREFIX.length());
+            return Optional.of(bearer.substring(JWT_PREFIX.length()));
         }
-        return null;
+        return Optional.empty();
     }
 
 }

@@ -5,7 +5,7 @@ help:
 
 run-dev:
 	docker build . -f ./docker/postgresql/Dockerfile -t psqldb:latest
-	docker run --network host -e POSTGRES_PASSWORD=postgres psqldb:latest #
+	docker run -d --network host -e POSTGRES_DATABASE=springapp -e POSTGRES_USER=springapp -e POSTGRES_PASSWORD=springapp psqldb:latest #
 	mvn spring-boot:run
 
 run-prod:

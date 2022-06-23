@@ -4,16 +4,23 @@ import com.me.springapp.dto.ArticleDTO;
 import com.me.springapp.dto.PagedArticlesDTO;
 import com.me.springapp.model.Article;
 import com.me.springapp.model.ModelState;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+import java.util.Optional;
 
 public interface ArticleService {
-    ResponseEntity<PagedArticlesDTO> findAll(String title, int page, int size, String[] sort);
-    ResponseEntity<PagedArticlesDTO> findAllByState(String title, int page, int size, String[] sort, ModelState state);
-    ResponseEntity<Article> findById(int id);
-    ResponseEntity<Article> findByIdAndState(int id, ModelState state);
-    ResponseEntity<Article> createArticle(ArticleDTO articleDTO);
-    ResponseEntity<Article> updateArticle(int id, ArticleDTO articleDTO);
-    ResponseEntity<HttpStatus> deleteArticle(int id);
-    ResponseEntity<HttpStatus> softDeleteArticle(int id);
+    Optional<PagedArticlesDTO> findAll(String title, int page, int size, String[] sort);
+
+    Optional<PagedArticlesDTO> findAllByState(String title, int page, int size, String[] sort, ModelState state);
+
+    Optional<Article> findById(int id);
+
+    Optional<Article> findByIdAndState(int id, ModelState state);
+
+    Optional<Article> createArticle(ArticleDTO articleDTO);
+
+    Optional<Article> updateArticle(int id, ArticleDTO articleDTO);
+
+    void deleteArticle(int id);
+
+    Optional<Article> softDeleteArticle(int id);
 }

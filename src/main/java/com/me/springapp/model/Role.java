@@ -1,9 +1,9 @@
 package com.me.springapp.model;
 
 public enum Role {
-    ROLE_USER("USER"),
-    ROLE_MODERATOR("MODERATOR"),
-    ROLE_ADMIN("ADMIN");
+    ROLE_USER("User"),
+    ROLE_MODERATOR("Moderator"),
+    ROLE_ADMIN("Admin");
 
     public final String label;
 

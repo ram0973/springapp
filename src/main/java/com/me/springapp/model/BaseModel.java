@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
-import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -37,6 +36,11 @@ public abstract class BaseModel implements Persistable<Integer> {
     @Setter
     @CreationTimestamp
     private LocalDateTime dateCreated;
+
+    public BaseModel(ModelState modelState, LocalDateTime dateCreated) {
+        this.state = modelState;
+        this.dateCreated = dateCreated;
+    }
 
     // doesn't work for hibernate lazy proxy
     public int id() {
@@ -66,10 +70,5 @@ public abstract class BaseModel implements Persistable<Integer> {
     @Override
     public int hashCode() {
         return id == null ? 0 : id;
-    }
-
-    public BaseModel(ModelState modelState, LocalDateTime dateCreated) {
-        this.state = modelState;
-        this.dateCreated = dateCreated;
     }
 }

@@ -3,7 +3,10 @@ package com.me.springapp.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -32,7 +35,7 @@ public class Article extends BaseModel {
     private String image;
 
     @ManyToOne
-    @JsonIgnoreProperties({"email", "password", "active", "dateCreated", "roles"})
+    @JsonIgnoreProperties({"email", "password", "dateCreated", "roles"})
     @JsonInclude
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
@@ -44,11 +47,6 @@ public class Article extends BaseModel {
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<ArticleTag> tags;
 
-    @Override
-    public Integer getId() {
-        return id();
-    }
-
     public Article(ModelState state, LocalDateTime dateCreated, String title, String excerpt, String content,
                    String image, User user, Set<ArticleTag> tags) {
         super(state, dateCreated);
@@ -58,5 +56,10 @@ public class Article extends BaseModel {
         this.image = image;
         this.user = user;
         this.tags = tags;
+    }
+
+    @Override
+    public Integer getId() {
+        return id();
     }
 }

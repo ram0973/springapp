@@ -1,11 +1,13 @@
 package com.me.springapp.configuration;
 
-import com.me.springapp.model.*;
+import com.me.springapp.model.Article;
+import com.me.springapp.model.ModelState;
+import com.me.springapp.model.Role;
+import com.me.springapp.model.User;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +20,6 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 public class DBSeedConfig {
-
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -28,13 +28,13 @@ public class DBSeedConfig {
         return args -> {
             log.info("Preloading " + userRepository.save(
                 new User(ModelState.ENABLED, LocalDateTime.now(), "bilbo@baggins.com",
-                    passwordEncoder.encode("123"), null, Set.of(Role.ROLE_USER))));
+                    passwordEncoder.encode("123123"), null, Set.of(Role.ROLE_USER))));
             log.info("Preloading " + userRepository.save(
                 new User(ModelState.ENABLED, LocalDateTime.now(), "frodo@baggins.com",
-                    passwordEncoder.encode("123"), null,
+                    passwordEncoder.encode("123123"), null,
                     Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR))));
             User gendalf = new User(ModelState.ENABLED, LocalDateTime.now(), "gendalf@white.com",
-                passwordEncoder.encode("123"), null,
+                passwordEncoder.encode("123123"), null,
                 Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN));
             log.info("Preloading " + userRepository.save(gendalf));
 
@@ -42,7 +42,7 @@ public class DBSeedConfig {
                 log.info("Preloading " + articleRepository.save(
                     // TODO: remove base constructor on migrations implement
                     new Article(ModelState.ENABLED, LocalDateTime.now(), String.format("Article №%d", i),
-                        "Excerpt", "Content", null,  gendalf, null)));
+                        "Excerpt", "Content", null, gendalf, null)));
             }
         };
     }

@@ -5,7 +5,9 @@ import com.me.springapp.exceptions.NoSuchUserException;
 import com.me.springapp.model.ModelState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
-import com.me.springapp.security.dto.*;
+import com.me.springapp.security.dto.LoginRequestDTO;
+import com.me.springapp.security.dto.SignupRequestDTO;
+import com.me.springapp.security.dto.TokensResponseDTO;
 import com.me.springapp.security.model.JwtAuthentication;
 import com.me.springapp.security.provider.JwtProvider;
 import com.me.springapp.service.UserService;
@@ -22,9 +24,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -33,25 +38,10 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
     private final AuthenticationProvider authenticationProvider;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final String jwtSecret;
     private final JwtProvider jwtProvider;
-
-    @Autowired
-    public AuthServiceImpl(AuthenticationProvider authenticationProvider,
-                           UserService userService,
-                           @Value("${springapp.jwtSecret}") String jwtSecret,
-                           PasswordEncoder passwordEncoder,
-                           JwtProvider jwtProvider) {
-        this.authenticationProvider = authenticationProvider;
-        this.userService = userService;
-        this.jwtSecret = jwtSecret;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtProvider = jwtProvider;
-    }
-
     private final Map<String, String> refreshStorage = new HashMap<>();
 
-    public TokensResponseDTO login(@Valid LoginRequestDTO authRequest) {
+    public TokensResponseDTO login(@NotNull LoginRequestDTO authRequest) {
         final User user = userService.findUserByEmailIgnoreCase(authRequest.email())
             .orElseThrow(NoSuchUserException::new);
         if (passwordEncoder.matches(authRequest.password(), user.getPassword())) {
@@ -87,8 +77,7 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
             final String email = claims.getSubject();
             final String savedRefreshToken = refreshStorage.get(email);
             if (savedRefreshToken != null && savedRefreshToken.equals(refreshToken)) {
-                final User user = userService.findUserByEmailIgnoreCase(email)
-                    .orElseThrow(NoSuchUserException::new);
+                final User user = userService.findUserByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 return new TokensResponseDTO(accessToken, null);
             }
@@ -102,8 +91,7 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
             final String email = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(email);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final User user = userService.findUserByEmailIgnoreCase(email)
-                    .orElseThrow(NoSuchUserException::new);
+                final User user = userService.findUserByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getEmail(), newRefreshToken);

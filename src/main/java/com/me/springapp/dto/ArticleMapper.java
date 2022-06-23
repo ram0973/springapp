@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ArticleMapper {
-
     static final String dateTimeFormat = "dd-MM-yyyy HH:mm";
 
     public static ArticleDTO articleToDto(Article article) {

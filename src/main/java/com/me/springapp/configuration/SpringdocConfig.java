@@ -13,15 +13,14 @@ import org.springframework.web.servlet.resource.WebJarsResourceResolver;
 
 @Configuration
 public class SpringdocConfig implements WebMvcConfigurer {
-
     @Bean
     public OpenAPI customOpenAPI(@Value("1.0") String appVersion) {
         return new OpenAPI().info(new Info()
-                .title("Rest HATEOAS application API")
-                .version("1.0")
-                .description("This is a sample Spring application")
-                .termsOfService("http://swagger.io/terms/")
-                .license(new License().name("Apache 2.0").url("http://springdoc.org")));
+            .title("Rest HATEOAS application API")
+            .version("1.0")
+            .description("This is a sample Spring application")
+            .termsOfService("http://swagger.io/terms/")
+            .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 
     @Override
@@ -33,4 +32,3 @@ public class SpringdocConfig implements WebMvcConfigurer {
             .addResolver(new PathResourceResolver());
     }
 }
-

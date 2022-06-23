@@ -15,10 +15,19 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Optional<Article> findById(int id);
+
     Optional<Article> findByIdAndState(int id, ModelState state);
-    @NonNull Page<Article> findAll(@NonNull Pageable pageable);
-    Page<Article> findAllByTitleContaining(String title, Pageable pageable);
-    Page<Article> findAllByState(ModelState state, Pageable pageable);
-    Page<Article> findAllByTitleContainingAndState(String title, ModelState state, Pageable pageable);
+
+    @NonNull
+    Page<Article> findAll(@NonNull Pageable pageable);
+
+    @NonNull
+    Page<Article> findAllByTitleContaining(String title, @NonNull Pageable pageable);
+
+    @NonNull
+    Page<Article> findAllByState(ModelState state, @NonNull Pageable pageable);
+
+    @NonNull
+    Page<Article> findAllByTitleContainingAndState(String title, ModelState state, @NonNull Pageable pageable);
 }
 

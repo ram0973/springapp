@@ -21,10 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true) // securedEnabled = true, // jsr250Enabled = true,
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Autowired
     private final AuthenticationProvider authenticationProvider;
-
     @Autowired
     private final JwtAuthenticationFilter jwtFilter;
 
@@ -46,14 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
-            .mvcMatchers("/", "/error", "/api/test/**", "/api/auth/login", "/api/auth/token", "/swagger-ui/**")
-            .permitAll()
-            .anyRequest().permitAll();
+            .mvcMatchers("/", "/api/auth/login", "/api/auth/token").permitAll()
+            .mvcMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+            .anyRequest().permitAll();//authenticated();
         http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        //http.addFilterBefore(new JwtOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class);
-        //http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        //http.exceptionHandling((exceptions) -> exceptions
-        //    .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-        //    .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
     }
 }

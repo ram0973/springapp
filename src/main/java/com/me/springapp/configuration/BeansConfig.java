@@ -12,19 +12,34 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 public class BeansConfig {
+    @Autowired
+    public UserDetailsServiceImpl userDetailsService;
+
+    // resolve ${} in @Value
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
+        sessionLocaleResolver.setDefaultLocale(Locale.forLanguageTag("ru"));
+        return sessionLocaleResolver;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
-    @Autowired
-    public UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -45,11 +60,4 @@ public class BeansConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
-    // resolve ${} in @Value
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
 }
