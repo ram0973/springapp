@@ -11,3 +11,6 @@ run-dev:
 run-prod:
 	mvn package
 	docker-compose -f docker-compose.yml
+
+docker-remove-images:
+	docker rm -f $(docker ps -a -q)

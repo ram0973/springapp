@@ -1,0 +1,1 @@
+{"ast":null,"code":"export * from \"./Footer\";","map":{"version":3,"sources":["/home/ra/jobs/springapp/frontend/react/components/Footer/index.ts"],"names":[],"mappings":"AAAA,cAAc,UAAd","sourcesContent":["export * from \"./Footer\";\n"]},"metadata":{},"sourceType":"module"}

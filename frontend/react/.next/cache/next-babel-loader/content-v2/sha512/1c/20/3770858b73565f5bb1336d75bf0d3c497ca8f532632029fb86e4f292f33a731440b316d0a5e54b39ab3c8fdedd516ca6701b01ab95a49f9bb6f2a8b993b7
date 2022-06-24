@@ -1,0 +1,1 @@
+{"ast":null,"code":"import fetch from \"node-fetch\";\nimport { config } from \"./config\";\nexport async function fetchArticles() {\n  const res = await fetch(`${config.baseUrl}/articles`);\n  return await res.json();\n}","map":null,"metadata":{},"sourceType":"module"}

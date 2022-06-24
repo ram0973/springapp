@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private Optional<String> getTokenFromRequest(HttpServletRequest request) {
         final String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String JWT_PREFIX = "BEARER ";
+        final String JWT_PREFIX = "BEARER ";
         if (StringUtils.hasText(bearer) && bearer.startsWith(JWT_PREFIX)) {
             return Optional.of(bearer.substring(JWT_PREFIX.length()));
         }
