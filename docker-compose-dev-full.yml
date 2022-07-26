@@ -1,0 +1,39 @@
+---
+# Use with docker-compose -f docker-compose-dev-full.yml up
+
+version: "3.8"
+services:
+  postgresql-service:
+    container_name: springapp-postgres-dev
+    network_mode: host
+    env_file:
+      - ./src/main/resources/.env
+    build:
+      context: .
+      dockerfile: ./docker/postgresql/Dockerfile
+
+  pgadmin4-service:
+    image: dpage/pgadmin4
+    restart: always
+    network_mode: host
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pg@pg.pg
+      PGADMIN_DEFAULT_PASSWORD: pg
+      PGADMIN_LISTEN_PORT: 8000
+    depends_on:
+      - postgresql-service
+
+  springapp-service:
+    container_name: springapp-dev
+    restart: "no"
+    network_mode: host
+    env_file:
+      - ./src/main/resources/.env
+    build:
+      context: .
+      dockerfile: docker/springapp/Dockerfile
+      target: development
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgresql-service

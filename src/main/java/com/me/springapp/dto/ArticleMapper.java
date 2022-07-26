@@ -6,28 +6,31 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ArticleMapper {
-    static final String dateTimeFormat = "dd-MM-yyyy HH:mm";
+    static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm";
+
+    private ArticleMapper() {
+    }
 
     public static ArticleDTO articleToDto(Article article) {
         return ArticleDTO.builder()
-            .modelState(article.getState())
+            .state(article.getState())
             .title(article.getTitle())
             .excerpt(article.getExcerpt())
             .content(article.getContent())
             .image(article.getImage())
-            .dateCreated(article.getDateCreated().format(DateTimeFormatter.ofPattern(dateTimeFormat)))
+            .dateCreated(article.getDateCreated().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)))
             .tags(article.getTags())
             .build();
     }
 
     public static Article articleFromDto(ArticleDTO articleDTO) {
         return Article.builder()
-            .state(articleDTO.modelState())
+            .state(articleDTO.state())
             .title(articleDTO.title())
             .excerpt(articleDTO.excerpt())
             .content(articleDTO.content())
             .image(articleDTO.image())
-            .dateCreated(LocalDateTime.parse(articleDTO.dateCreated(), DateTimeFormatter.ofPattern(dateTimeFormat)))
+            .dateCreated(LocalDateTime.parse(articleDTO.dateCreated(), DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)))
             .tags(articleDTO.tags())
             .build();
     }
@@ -37,9 +40,9 @@ public class ArticleMapper {
         article.setExcerpt(articleDTO.excerpt());
         article.setContent(articleDTO.content());
         article.setImage(articleDTO.image());
-        article.setState(articleDTO.modelState());
+        article.setState(articleDTO.state());
         article.setDateCreated(LocalDateTime.parse(articleDTO.dateCreated(),
-            DateTimeFormatter.ofPattern(dateTimeFormat)));
+            DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
         article.setTags(articleDTO.tags());
     }
 }

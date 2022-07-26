@@ -1,7 +1,7 @@
 package com.me.springapp.repository;
 
 import com.me.springapp.model.Article;
-import com.me.springapp.model.ModelState;
+import com.me.springapp.model.ArticleState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Optional<Article> findById(int id);
 
-    Optional<Article> findByIdAndState(int id, ModelState state);
+    Optional<Article> findByIdAndState(int id, ArticleState state);
 
     @NonNull
     Page<Article> findAll(@NonNull Pageable pageable);
@@ -25,9 +25,9 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Page<Article> findAllByTitleContaining(String title, @NonNull Pageable pageable);
 
     @NonNull
-    Page<Article> findAllByState(ModelState state, @NonNull Pageable pageable);
+    Page<Article> findAllByState(ArticleState state, @NonNull Pageable pageable);
 
     @NonNull
-    Page<Article> findAllByTitleContainingAndState(String title, ModelState state, @NonNull Pageable pageable);
+    Page<Article> findAllByTitleContainingAndState(String title, ArticleState state, @NonNull Pageable pageable);
 }
 

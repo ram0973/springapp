@@ -3,9 +3,9 @@ package com.me.springapp.service;
 import com.me.springapp.dto.ArticleDTO;
 import com.me.springapp.dto.ArticleMapper;
 import com.me.springapp.dto.PagedArticlesDTO;
-import com.me.springapp.exceptions.NoSuchArticleException;
+import com.me.springapp.exceptions.NoSuchEntityException;
 import com.me.springapp.model.Article;
-import com.me.springapp.model.ModelState;
+import com.me.springapp.model.ArticleState;
 import com.me.springapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,7 +57,7 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
     }
 
     @Override
-    public Optional<Article> findByIdAndState(int id, ModelState state) {
+    public Optional<Article> findByIdAndState(int id, ArticleState state) {
         return articleRepository.findByIdAndState(id, state);
     }
 
@@ -70,7 +70,8 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
     @Override
     public Optional<Article> updateArticle(int id, ArticleDTO articleDTO) {
-        Article article = articleRepository.findById(id).orElseThrow(NoSuchArticleException::new);
+        Article article = articleRepository.findById(id).orElseThrow(
+            () -> new NoSuchEntityException("No such article with id: " + id));
         ArticleMapper.updateArticleFromDto(article, articleDTO);
         return Optional.of(articleRepository.save(article));
     }
@@ -82,14 +83,15 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
     @Override
     public Optional<Article> softDeleteArticle(int id) {
-        Article article = articleRepository.findById(id).orElseThrow(NoSuchArticleException::new);
-        article.setState(ModelState.SOFT_DELETED);
+        Article article = articleRepository.findById(id).orElseThrow(
+            () -> new NoSuchEntityException("No such article with id: " + id));
+        article.setState(ArticleState.SOFT_DELETED);
         return Optional.of(articleRepository.save(article));
     }
 
     @Override
     public Optional<PagedArticlesDTO> findAllByState(String title, int page, int size,
-                                                     String[] sort, ModelState state) {
+                                                     String[] sort, ArticleState state) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<Article> pagedArticles;
         if (title == null || title.isBlank()) {

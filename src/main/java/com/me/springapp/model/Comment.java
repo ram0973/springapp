@@ -23,6 +23,7 @@ public class Comment extends BaseModel {
     @NotBlank
     private String body;
 
+    @NotBlank
     private LocalDateTime dateCreated;
 
     @ManyToOne

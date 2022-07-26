@@ -27,20 +27,10 @@ public abstract class BaseModel implements Persistable<Integer> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
-    @Enumerated(EnumType.STRING)
-    @Getter
-    @Setter
-    private ModelState state;
-
     @Getter
     @Setter
     @CreationTimestamp
     private LocalDateTime dateCreated;
-
-    public BaseModel(ModelState modelState, LocalDateTime dateCreated) {
-        this.state = modelState;
-        this.dateCreated = dateCreated;
-    }
 
     // doesn't work for hibernate lazy proxy
     public int id() {

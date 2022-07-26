@@ -3,8 +3,8 @@ package com.me.springapp.service;
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
 import com.me.springapp.dto.UserMapper;
-import com.me.springapp.exceptions.NoSuchUserException;
-import com.me.springapp.model.ModelState;
+import com.me.springapp.exceptions.NoSuchEntityException;
+import com.me.springapp.model.UserState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
@@ -47,7 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addRoleToUser(String email, Role role) {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(
+            () -> new NoSuchEntityException("No such user with email: " + email)
+        );
         Set<Role> roles = user.getRoles();
         roles.add(role);
         user.setRoles(roles);
@@ -62,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state) {
+    public Optional<PagedUsersDTO> findAllByState(int page, int size, String[] sort, UserState state) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(PagedEntityUtils.getSortOrders(sort)));
         Page<User> pagedUsers;
         pagedUsers = userRepository.findAllByState(pageable, state);
@@ -80,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByIdAndState(int id, ModelState state) {
+    public Optional<User> findByIdAndState(int id, UserState state) {
         return userRepository.findByIdAndState(id, state);
     }
 
@@ -98,14 +100,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> softDeleteUser(int id) {
-        User user = userRepository.findById(id).orElseThrow(NoSuchUserException::new);
-        user.setState(ModelState.SOFT_DELETED);
+        User user = userRepository.findById(id).orElseThrow(
+            () -> new NoSuchEntityException("No such user with id: " + id));
+        user.setState(UserState.SOFT_DELETED);
         return Optional.of(userRepository.save(user));
     }
 
     @Override
     public Optional<User> updateUser(int id, UserDTO userDTO) {
-        User user = userRepository.findById(id).orElseThrow(NoSuchUserException::new);
+        User user = userRepository.findById(id).orElseThrow(
+            () -> new NoSuchEntityException("No such user with id: " + id));
         UserMapper.updateUserFromDto(user, userDTO);
         return Optional.of(userRepository.save(user));
     }

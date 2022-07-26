@@ -1,6 +1,6 @@
 package com.me.springapp.security.service;
 
-import com.me.springapp.exceptions.NoSuchUserException;
+import com.me.springapp.exceptions.NoSuchEntityException;
 import com.me.springapp.model.User;
 import com.me.springapp.security.userdetails.UserDetailsImpl;
 import com.me.springapp.service.UserService;
@@ -36,11 +36,12 @@ public class AuthenticationProviderService implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        User user = userService.findUserByEmailIgnoreCase(email).orElseThrow(NoSuchUserException::new);
+        User user = userService.findUserByEmailIgnoreCase(email).orElseThrow(
+            () -> new NoSuchEntityException("No such user with email: " + email));
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
-        Authentication resultAuthentication = checkPassword(userDetails, password, passwordEncoder);
-        if (resultAuthentication.isAuthenticated()) {
-            return resultAuthentication;
+        Authentication userAuthentication = this.checkPassword(userDetails, password, passwordEncoder);
+        if (userAuthentication.isAuthenticated()) {
+            return userAuthentication;
         }
         throw new BadCredentialsException("Bad credentials");
     }

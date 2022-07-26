@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -27,12 +26,17 @@ public class Article extends BaseModel {
     @Size(max = 255)
     private String title;
 
-    @NotBlank
     private String excerpt;
+    @NotBlank
 
     private String content;
 
     private String image;
+
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private ArticleState state;
 
     @ManyToOne
     @JsonIgnoreProperties({"email", "password", "dateCreated", "roles"})
@@ -46,17 +50,6 @@ public class Article extends BaseModel {
         joinColumns = @JoinColumn(name = "article_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<ArticleTag> tags;
-
-    public Article(ModelState state, LocalDateTime dateCreated, String title, String excerpt, String content,
-                   String image, User user, Set<ArticleTag> tags) {
-        super(state, dateCreated);
-        this.title = title;
-        this.excerpt = excerpt;
-        this.content = content;
-        this.image = image;
-        this.user = user;
-        this.tags = tags;
-    }
 
     @Override
     public Integer getId() {

@@ -9,7 +9,7 @@ trim_trailing_whitespace = true
 charset = utf-8
 indent_style = space
 
-[*.{ts, js,html,css}]
+[*.{ts, js, html, css, yml}]
 indent_size = 2
 
 [*.java]
@@ -17,6 +17,3 @@ indent_size = 4
 
 [Makefile]
 indent_style = tab
-
-[*.yml]
-indent_size = 2

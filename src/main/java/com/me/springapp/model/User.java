@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -20,6 +19,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class User extends BaseModel {
+
+    private static final long serialVersionUID = 2405172041950251807L;
 
     @NotBlank
     @Size(max = 128)
@@ -43,12 +44,12 @@ public class User extends BaseModel {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    public User(ModelState state, LocalDateTime dateCreated, String email, String password,
-                Set<Article> articles, Set<Role> roles) {
-        super(state, dateCreated);
-        this.email = email;
-        this.password = password;
-        this.articles = articles;
-        this.roles = roles;
+    @Enumerated(EnumType.STRING)
+
+    @Setter
+    private UserState state;
+
+    public UserState getState() {
+        return state;
     }
 }

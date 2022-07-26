@@ -1,6 +1,6 @@
 package com.me.springapp.security.userdetails;
 
-import com.me.springapp.model.ModelState;
+import com.me.springapp.model.UserState;
 import com.me.springapp.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,12 +36,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return !user.getState().equals(ModelState.EXPIRED);
+        return !user.getState().equals(UserState.EXPIRED);
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.getState().equals(ModelState.LOCKED);
+        return user.getState().equals(UserState.LOCKED);
     }
 
     @Override
@@ -51,6 +51,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getState().equals(ModelState.ENABLED);
+        return user.getState().equals(UserState.ENABLED);
     }
 }

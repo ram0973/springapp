@@ -1,9 +1,6 @@
 package com.me.springapp.configuration;
 
-import com.me.springapp.model.Article;
-import com.me.springapp.model.ModelState;
-import com.me.springapp.model.Role;
-import com.me.springapp.model.User;
+import com.me.springapp.model.*;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,23 +23,46 @@ public class DBSeedConfig {
     CommandLineRunner initDatabase(UserRepository userRepository,
                                    ArticleRepository articleRepository) {
         return args -> {
-            log.info("Preloading " + userRepository.save(
-                new User(ModelState.ENABLED, LocalDateTime.now(), "bilbo@baggins.com",
-                    passwordEncoder.encode("123123"), null, Set.of(Role.ROLE_USER))));
-            log.info("Preloading " + userRepository.save(
-                new User(ModelState.ENABLED, LocalDateTime.now(), "frodo@baggins.com",
-                    passwordEncoder.encode("123123"), null,
-                    Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR))));
-            User gendalf = new User(ModelState.ENABLED, LocalDateTime.now(), "gendalf@white.com",
-                passwordEncoder.encode("123123"), null,
-                Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN));
-            log.info("Preloading " + userRepository.save(gendalf));
+            log.info("Preloading Users");
 
+            User bilbo = new User();
+            bilbo.setState(UserState.ENABLED);
+            bilbo.setDateCreated(LocalDateTime.now());
+            bilbo.setEmail("bilbo@baggins.com");
+            bilbo.setPassword(passwordEncoder.encode("123123"));
+            bilbo.setArticles(null);
+            bilbo.setRoles(Set.of(Role.ROLE_USER));
+            userRepository.save(bilbo);
+
+            User frodo = new User();
+            frodo.setState(UserState.ENABLED);
+            frodo.setDateCreated(LocalDateTime.now());
+            frodo.setEmail("frodo@baggins.com");
+            frodo.setPassword(passwordEncoder.encode("123123"));
+            frodo.setArticles(null);
+            frodo.setRoles(Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR));
+            userRepository.save(frodo);
+
+            User gendalf = new User();
+            gendalf.setState(UserState.ENABLED);
+            gendalf.setDateCreated(LocalDateTime.now());
+            gendalf.setEmail("gendalf@white.com");
+            gendalf.setPassword(passwordEncoder.encode("123123"));
+            gendalf.setArticles(null);
+            gendalf.setRoles(Set.of(Role.ROLE_USER, Role.ROLE_MODERATOR, Role.ROLE_ADMIN));
+            userRepository.save(gendalf);
+
+            log.info("Preloading Articles");
             for (int i = 0; i < 12; i++) {
-                log.info("Preloading " + articleRepository.save(
-                    // TODO: remove base constructor on migrations implement
-                    new Article(ModelState.ENABLED, LocalDateTime.now(), String.format("Article №%d", i),
-                        "Excerpt", "Content", null, gendalf, null)));
+                Article article = new Article();
+                article.setExcerpt("Excerpt");
+                article.setContent("Content");
+                article.setImage(null);
+                article.setUser(gendalf);
+                article.setState(ArticleState.ENABLED);
+                article.setTitle(String.format("Article №%d", i));
+                article.setDateCreated(LocalDateTime.now());
+                articleRepository.save(article);
             }
         };
     }

@@ -18,8 +18,6 @@ export const ArticleBody = ({ article }: ArticleBodyProps) => {
 
       <Meta>
         <span>{article.dateCreated}</span>
-        <span>&middot;</span>
-        <span>&middot;</span>
       </Meta>
     </div>
   )

@@ -14,19 +14,8 @@ services:
       dockerfile: ./docker/postgresql/Dockerfile
 
   springapp-service:
-    container_name: springapp-dev
-    restart: "no"
-    network_mode: host
-    env_file:
-      - ./src/main/resources/.env
-    build:
-      context: .
-      dockerfile: docker/springapp/Dockerfile
-      target: development
-    volumes:
-      - ./:/app
-    depends_on:
-      - postgresql-service
+    deploy:
+      replicas: 0
 
   pgadmin4-service:
     image: dpage/pgadmin4

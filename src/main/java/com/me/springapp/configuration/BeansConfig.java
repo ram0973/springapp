@@ -1,7 +1,6 @@
 package com.me.springapp.configuration;
 
 import com.me.springapp.security.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -20,8 +19,9 @@ import java.util.Locale;
 
 @Configuration
 public class BeansConfig {
-    @Autowired
-    public UserDetailsServiceImpl userDetailsService;
+
+    static final String PROJECT_LANGUAGE = "ru";
+    static final String[] ALLOWED_ORIGINS = {"http://localhost:8080"};
 
     // resolve ${} in @Value
     @Bean
@@ -32,7 +32,7 @@ public class BeansConfig {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
-        sessionLocaleResolver.setDefaultLocale(Locale.forLanguageTag("ru"));
+        sessionLocaleResolver.setDefaultLocale(Locale.forLanguageTag(PROJECT_LANGUAGE));
         return sessionLocaleResolver;
     }
 
@@ -42,7 +42,7 @@ public class BeansConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailsService);
@@ -53,7 +53,7 @@ public class BeansConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:8080"));
+        config.setAllowedOrigins(List.of(ALLOWED_ORIGINS));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

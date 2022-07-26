@@ -1,9 +1,6 @@
 package com.me.springapp.security.controller;
 
-import com.me.springapp.security.dto.LoginRequestDTO;
-import com.me.springapp.security.dto.RefreshTokenRequestDTO;
-import com.me.springapp.security.dto.SignupRequestDTO;
-import com.me.springapp.security.dto.TokensResponseDTO;
+import com.me.springapp.security.dto.*;
 import com.me.springapp.security.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +21,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<TokensResponseDTO> login(@RequestBody @Valid LoginRequestDTO authRequest) {
-        final TokensResponseDTO token = authService.login(authRequest);
+    public ResponseEntity<AccessAndRefreshTokensResponseDTO> login(@RequestBody @Valid LoginRequestDTO authRequest) {
+        AccessAndRefreshTokensResponseDTO token = authService.login(authRequest);
         return ResponseEntity.ok(token);
     }
 
@@ -35,14 +32,15 @@ public class AuthController {
     }
 
     @PostMapping("token")
-    public ResponseEntity<TokensResponseDTO> getNewAccessToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
-        final TokensResponseDTO token = authService.getAccessToken(request.refreshToken());
+    public ResponseEntity<AccessTokenResponseDTO> getNewAccessToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
+        AccessTokenResponseDTO token = authService.getAccessToken(request.refreshToken());
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("refresh")
-    public ResponseEntity<TokensResponseDTO> getNewRefreshToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
-        final TokensResponseDTO token = authService.refresh(request.refreshToken());
+    public ResponseEntity<AccessAndRefreshTokensResponseDTO> getNewRefreshToken(
+        @RequestBody @Valid RefreshTokenRequestDTO request) {
+        AccessAndRefreshTokensResponseDTO token = authService.refresh(request.refreshToken());
         return ResponseEntity.ok(token);
     }
 

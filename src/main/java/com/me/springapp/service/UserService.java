@@ -2,7 +2,7 @@ package com.me.springapp.service;
 
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
-import com.me.springapp.model.ModelState;
+import com.me.springapp.model.UserState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 
@@ -15,13 +15,13 @@ public interface UserService {
 
     Optional<PagedUsersDTO> findAll(int page, int size, String[] sort);
 
-    Optional<PagedUsersDTO> findAllByState(int page, int size, String[] sort, ModelState state);
+    Optional<PagedUsersDTO> findAllByState(int page, int size, String[] sort, UserState state);
 
     Optional<User> findById(int id);
 
     Optional<User> findUserByEmailIgnoreCase(String email);
 
-    Optional<User> findByIdAndState(int id, ModelState state);
+    Optional<User> findByIdAndState(int id, UserState state);
 
     Optional<User> createUser(UserDTO userDTO);
 

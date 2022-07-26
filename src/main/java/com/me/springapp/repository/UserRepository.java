@@ -1,6 +1,6 @@
 package com.me.springapp.repository;
 
-import com.me.springapp.model.ModelState;
+import com.me.springapp.model.UserState;
 import com.me.springapp.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +23,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findById(int id);
 
-    Optional<User> findByIdAndState(int id, ModelState state);
+    Optional<User> findByIdAndState(int id, UserState state);
 
     Boolean existsByEmailIgnoreCase(String email);
 
     @NonNull
     Page<User> findAll(@NonNull Pageable pageable);
 
-    Page<User> findAllByState(@NonNull Pageable pageable, ModelState state);
+    Page<User> findAllByState(@NonNull Pageable pageable, UserState state);
 }
