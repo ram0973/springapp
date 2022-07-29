@@ -43,10 +43,6 @@ export default class MyDocument extends Document {
             name="description"
             content="The Next generation of a news feed"
           />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap"
-            rel="stylesheet"
-          />
 
           {this.props.styles}
         </Head>

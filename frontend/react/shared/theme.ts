@@ -16,6 +16,10 @@ export const theme = {
 
 export type MainThemeProps = ThemeProps<typeof theme>;
 export const GlobalStyle = createGlobalStyle<MainThemeProps>`
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  
   body {
     margin: 0;
     font-family: ${({ theme }) => theme.fonts.basic};
