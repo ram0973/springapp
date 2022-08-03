@@ -33,15 +33,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
+        http.cors()
+            .disable();
         http.csrf()
             //.ignoringAntMatchers("/api/auth/login")
             .disable(); // JWT
         http.formLogin()
             //.usernameParameter("email")
             .disable();
-        http.logout().disable();
         http.httpBasic().disable();
+        http.logout().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
             .mvcMatchers("/", "/api/auth/login", "/api/auth/token").permitAll()

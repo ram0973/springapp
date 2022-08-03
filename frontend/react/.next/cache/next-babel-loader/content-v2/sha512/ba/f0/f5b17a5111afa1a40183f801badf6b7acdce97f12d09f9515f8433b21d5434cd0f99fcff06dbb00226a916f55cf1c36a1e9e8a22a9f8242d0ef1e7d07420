@@ -1,1 +1,0 @@
-{"ast":null,"code":"import styled from \"styled-components\";\nexport const Center = styled.div.withConfig({\n  displayName: \"style__Center\",\n  componentId: \"sc-11e5pa7-0\"\n})([\"max-width:1000px;padding:0 20px;margin:auto;@media (max-width:800px){max-width:520px;padding:0 15px;}\"]);","map":null,"metadata":{},"sourceType":"module"}

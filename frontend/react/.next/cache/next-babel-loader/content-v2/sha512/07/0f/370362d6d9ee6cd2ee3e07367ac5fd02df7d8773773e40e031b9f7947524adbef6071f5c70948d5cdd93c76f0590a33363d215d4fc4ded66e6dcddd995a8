@@ -1,1 +1,0 @@
-{"ast":null,"code":"export * from \"./Feed\";","map":{"version":3,"sources":["/home/ra/jobs/05-next-ssg/step-5/components/Feed/index.ts"],"names":[],"mappings":"AAAA,cAAc,QAAd","sourcesContent":["export * from \"./Feed\";\n"]},"metadata":{},"sourceType":"module"}

@@ -1,1 +1,0 @@
-{"ast":null,"code":"const staticArticlesIdList = [1, 2, 3];\nexport const articlePaths = staticArticlesIdList.map(id => ({\n  params: {\n    id: String(id)\n  }\n}));","map":null,"metadata":{},"sourceType":"module"}

@@ -1,1 +1,0 @@
-{"ast":null,"code":"import styled from \"styled-components\";\nexport const Container = styled.div.withConfig({\n  displayName: \"style__Container\",\n  componentId: \"oz4apw-0\"\n})([\"font-family:\", \";\"], p => p.theme.fonts.accent);","map":null,"metadata":{},"sourceType":"module"}

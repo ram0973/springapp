@@ -1,1 +1,0 @@
-{"ast":null,"code":"export * from \"./Header\";","map":{"version":3,"sources":["/home/ra/jobs/step-5/components/Header/index.ts"],"names":[],"mappings":"AAAA,cAAc,UAAd","sourcesContent":["export * from \"./Header\";\n"]},"metadata":{},"sourceType":"module"}

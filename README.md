@@ -41,8 +41,8 @@
 1. Java JDK 18
 2. Maven 3.6.3
 3. Postgresql 14.4
-4. Docker 20.10.14
-5. Docker-compose 1.29.2
+4. Docker 20.10
+5. Docker-compose 2.9.0
 6. NodeJs 16.16.0
 7. NPM 8.11.0
 
@@ -67,7 +67,7 @@ cd springapp
 # Development
 docker-compose up
 # Production
-docker-compose -f docker-compose.yml up
+docker-compose -f docker-compose-prod.yml up
 ```
 
 ## Документация (Swagger)

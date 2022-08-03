@@ -1,1 +1,0 @@
-{"ast":null,"code":"export * from \"./Loader\";","map":{"version":3,"sources":["/home/ra/jobs/step-5/components/Loader/index.ts"],"names":[],"mappings":"AAAA,cAAc,UAAd","sourcesContent":["export * from \"./Loader\";\n"]},"metadata":{},"sourceType":"module"}

@@ -1,1 +1,0 @@
-{"ast":null,"code":"export * from \"./Section\";","map":{"version":3,"sources":["/home/ra/jobs/05-next-ssg/step-5/components/Section/index.ts"],"names":[],"mappings":"AAAA,cAAc,WAAd","sourcesContent":["export * from \"./Section\";\n"]},"metadata":{},"sourceType":"module"}
