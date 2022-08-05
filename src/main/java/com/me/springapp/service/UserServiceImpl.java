@@ -9,6 +9,7 @@ import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private Optional<PagedUsersDTO> getPagedUsersDTOResponseEntity(Page<User> pagedUsers) {
+    private Optional<PagedUsersDTO> getPagedUsersDTOResponseEntity(@NotNull Page<User> pagedUsers) {
         List<User> users = pagedUsers.getContent();
         if (users.isEmpty()) {
             return Optional.empty();

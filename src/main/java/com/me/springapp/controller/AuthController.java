@@ -4,6 +4,7 @@ import com.me.springapp.security.dto.*;
 import com.me.springapp.security.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,25 +19,27 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<AccessAndRefreshTokensResponseDTO> login(@RequestBody @Valid LoginRequestDTO authRequest) {
-        AccessAndRefreshTokensResponseDTO token = authService.login(authRequest);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<AccessAndRefreshTokensResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {
+        AccessAndRefreshTokensResponseDTO tokens = authService.login(request);
+        return ResponseEntity.ok(tokens);
     }
 
     @PostMapping("signup")
-    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequestDTO request) {
-        return authService.signup(request);
+    public ResponseEntity<AccessAndRefreshTokensResponseDTO> signup(@RequestBody @Valid SignupRequestDTO request) {
+        AccessAndRefreshTokensResponseDTO tokens = authService.signup(request);
+        return ResponseEntity.ok(tokens);
     }
 
     @PostMapping("token")
-    public ResponseEntity<AccessTokenResponseDTO> getNewAccessToken(@RequestBody @Valid RefreshTokenRequestDTO request) {
+    public ResponseEntity<AccessTokenResponseDTO> getNewAccessToken(
+        @RequestBody @Valid @NotNull RefreshTokenRequestDTO request) {
         AccessTokenResponseDTO token = authService.getAccessToken(request.refreshToken());
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("refresh")
     public ResponseEntity<AccessAndRefreshTokensResponseDTO> getNewRefreshToken(
-        @RequestBody @Valid RefreshTokenRequestDTO request) {
+        @RequestBody @Valid @NotNull RefreshTokenRequestDTO request) {
         AccessAndRefreshTokensResponseDTO token = authService.refresh(request.refreshToken());
         return ResponseEntity.ok(token);
     }

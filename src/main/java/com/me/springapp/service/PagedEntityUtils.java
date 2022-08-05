@@ -1,12 +1,13 @@
 package com.me.springapp.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
 
 interface PagedEntityUtils {
-    static Sort.Direction getSortDirection(String direction) {
+    static Sort.Direction getSortDirection(@NotNull String direction) {
         if (direction.equals("asc")) {
             return Sort.Direction.ASC;
         } else if (direction.equals("desc")) {
@@ -15,7 +16,7 @@ interface PagedEntityUtils {
         return Sort.Direction.DESC;
     }
 
-    static List<Sort.Order> getSortOrders(String[] sort) {
+    static @NotNull List<Sort.Order> getSortOrders(@NotNull String[] sort) {
         List<Sort.Order> orders = new ArrayList<>();
         // sorting single column
         // ?sort=column1,direction1

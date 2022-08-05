@@ -1,6 +1,7 @@
 package com.me.springapp.dto;
 
 import com.me.springapp.model.Article;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +12,7 @@ public class ArticleMapper {
     private ArticleMapper() {
     }
 
-    public static ArticleDTO articleToDto(Article article) {
+    public static ArticleDTO articleToDto(@NotNull Article article) {
         return ArticleDTO.builder()
             .state(article.getState())
             .title(article.getTitle())
@@ -23,7 +24,7 @@ public class ArticleMapper {
             .build();
     }
 
-    public static Article articleFromDto(ArticleDTO articleDTO) {
+    public static Article articleFromDto(@NotNull ArticleDTO articleDTO) {
         return Article.builder()
             .state(articleDTO.state())
             .title(articleDTO.title())
@@ -35,7 +36,7 @@ public class ArticleMapper {
             .build();
     }
 
-    public static void updateArticleFromDto(Article article, ArticleDTO articleDTO) {
+    public static void updateArticleFromDto(@NotNull Article article, @NotNull ArticleDTO articleDTO) {
         article.setTitle(articleDTO.title());
         article.setExcerpt(articleDTO.excerpt());
         article.setContent(articleDTO.content());

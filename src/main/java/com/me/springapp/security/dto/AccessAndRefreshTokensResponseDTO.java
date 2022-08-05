@@ -7,7 +7,8 @@ import javax.validation.constraints.NotNull;
 
 public record AccessAndRefreshTokensResponseDTO(
     @NotBlank @NotNull String accessToken,
-    @NotBlank @NotNull String refreshToken) {
+    @NotBlank @NotNull String refreshToken,
+    @NotBlank @NotNull String email) {
     @Builder
     public AccessAndRefreshTokensResponseDTO {
         // builder by Lombok

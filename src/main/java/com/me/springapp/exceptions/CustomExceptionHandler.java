@@ -1,6 +1,7 @@
 package com.me.springapp.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +23,8 @@ public class CustomExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ResponseBody
-    public ValidationError onMethodArgumentNotValidException(HttpServletRequest req, MethodArgumentNotValidException e) {
+    public ValidationError onMethodArgumentNotValidException(
+        HttpServletRequest req, @NotNull MethodArgumentNotValidException e) {
         final List<FieldViolation> fieldViolations = e.getBindingResult()
             .getFieldErrors()
             .stream()
@@ -57,7 +59,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(InvalidJWTException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ResponseBody
-    protected ApiError handleInvalidJWTException(HttpServletRequest req, Exception e) {
+    protected ApiError handleInvalidJWTException(HttpServletRequest req, @NotNull Exception e) {
         log.error(e.getLocalizedMessage());
         return new ApiError(req, e, HttpStatus.UNPROCESSABLE_ENTITY);
     }

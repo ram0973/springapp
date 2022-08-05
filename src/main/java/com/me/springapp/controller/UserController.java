@@ -9,6 +9,7 @@ import com.me.springapp.model.UserState;
 import com.me.springapp.model.User;
 import com.me.springapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class UserController {
 
     @PostMapping("/users")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody @NotNull UserDTO userDTO) {
         Optional<User> optionalUser = userService.findUserByEmailIgnoreCase(userDTO.email());
         if (optionalUser.isPresent()) {
             throw new EmailAlreadyInUseException("Email already in use");

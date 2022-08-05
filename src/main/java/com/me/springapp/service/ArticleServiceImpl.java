@@ -8,6 +8,7 @@ import com.me.springapp.model.Article;
 import com.me.springapp.model.ArticleState;
 import com.me.springapp.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public class ArticleServiceImpl implements ArticleService, PagedEntityUtils {
 
     private final ArticleRepository articleRepository;
 
-    private Optional<PagedArticlesDTO> getPagedArticlesDTO(Page<Article> pagedArticles) {
+    private Optional<PagedArticlesDTO> getPagedArticlesDTO(@NotNull Page<Article> pagedArticles) {
         List<Article> articles = pagedArticles.getContent();
         if (articles.isEmpty()) {
             return Optional.empty();

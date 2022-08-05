@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 public interface AuthService {
     AccessAndRefreshTokensResponseDTO login(LoginRequestDTO authRequest);
 
-    ResponseEntity<String> signup(SignupRequestDTO signUpRequestDTO);
+    AccessAndRefreshTokensResponseDTO signup(SignupRequestDTO signUpRequestDTO);
 
     AccessTokenResponseDTO getAccessToken(@NonNull @NotBlank String refreshToken);
 

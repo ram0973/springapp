@@ -3,7 +3,7 @@
 # Should be used directly in development.
 # Automatically loads `docker-compose.yml` if it exists.
 # No extra steps required.
-# Should be used together with `docker-compose -f docker-compose-prod.yml -f docker-compose.prod.yml up`
+# Should be used together with `docker-compose -f docker-compose-prod.yml up`
 # in production.
 
 version: "3.8"

@@ -1,6 +1,7 @@
 package com.me.springapp.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +14,7 @@ public class ApiError {
     public LocalDateTime timestamp;
     public HttpStatus status;
 
-    public ApiError(HttpServletRequest req, Exception e, HttpStatus status) {
+    public ApiError(@NotNull HttpServletRequest req, @NotNull Exception e, HttpStatus status) {
         this.url = req.getRequestURL().toString();
         this.message = e.getLocalizedMessage();
         this.timestamp = LocalDateTime.now();

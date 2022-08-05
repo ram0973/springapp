@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -39,23 +36,26 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
     private final JwtProvider jwtProvider;
     private final Map<String, String> refreshStorage = new HashMap<>();
 
-    public AccessAndRefreshTokensResponseDTO login(@NotNull LoginRequestDTO authRequest) {
+    public AccessAndRefreshTokensResponseDTO login(
+        @NotNull LoginRequestDTO authRequest) {
         final User user = userService.findUserByEmailIgnoreCase(authRequest.email()).orElseThrow(
             () -> new NoSuchEntityException("No such user with email: " + authRequest.email()));
         if (passwordEncoder.matches(authRequest.password(), user.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getEmail(), refreshToken);
-            return new AccessAndRefreshTokensResponseDTO(accessToken, refreshToken);
+            return new AccessAndRefreshTokensResponseDTO(accessToken, refreshToken, user.getEmail());
         } else {
             throw new BadCredentialsException("Bad credentials");
         }
     }
 
     @Override
-    public ResponseEntity<String> signup(@NonNull SignupRequestDTO signUpRequest) {
-        userService.findUserByEmailIgnoreCase(signUpRequest.email()).orElseThrow(
-            () -> new EmailAlreadyInUseException("Email already in use"));
+    public AccessAndRefreshTokensResponseDTO signup(@NonNull SignupRequestDTO signUpRequest) {
+        Optional<User> userOptional = userService.findUserByEmailIgnoreCase(signUpRequest.email());
+        if (userOptional.isPresent()) {
+            throw new EmailAlreadyInUseException("Email already in use");
+        }
         User user = new User();
         user.setState(UserState.ENABLED);
         user.setDateCreated(LocalDateTime.now());
@@ -65,7 +65,10 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
         user.setRoles(new HashSet<>(Set.of(Role.ROLE_USER)));
 
         userService.saveUser(user);
-        return ResponseEntity.ok("User registered successfully");
+        final String accessToken = jwtProvider.generateAccessToken(user);
+        final String refreshToken = jwtProvider.generateRefreshToken(user);
+        refreshStorage.put(user.getEmail(), refreshToken);
+        return new AccessAndRefreshTokensResponseDTO(accessToken, refreshToken, user.getEmail());
     }
 
     public AccessTokenResponseDTO getAccessToken(@NonNull String refreshToken) {
@@ -94,7 +97,7 @@ public class AuthServiceImpl implements com.me.springapp.security.service.AuthSe
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getEmail(), newRefreshToken);
-                return new AccessAndRefreshTokensResponseDTO(accessToken, newRefreshToken);
+                return new AccessAndRefreshTokensResponseDTO(accessToken, newRefreshToken, user.getEmail());
             }
         }
         // TODO: check this

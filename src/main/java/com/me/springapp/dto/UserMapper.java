@@ -1,6 +1,7 @@
 package com.me.springapp.dto;
 
 import com.me.springapp.model.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +10,7 @@ public class UserMapper {
 
     static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm";
 
-    public static UserDTO userToDto(User user) {
+    public static UserDTO userToDto(@NotNull User user) {
         return UserDTO.builder()
             .state(user.getState())
             .email(user.getEmail())
@@ -19,7 +20,7 @@ public class UserMapper {
             .build();
     }
 
-    public static User userFromDto(UserDTO userDTO) {
+    public static User userFromDto(@NotNull UserDTO userDTO) {
         return User.builder()
             .state(userDTO.state())
             .email(userDTO.email())
@@ -29,7 +30,7 @@ public class UserMapper {
             .build();
     }
 
-    public static void updateUserFromDto(User user, UserDTO userDTO) {
+    public static void updateUserFromDto(@NotNull User user, @NotNull UserDTO userDTO) {
         user.setState(userDTO.state());
         user.setEmail(userDTO.email());
         user.setPassword(userDTO.password());
