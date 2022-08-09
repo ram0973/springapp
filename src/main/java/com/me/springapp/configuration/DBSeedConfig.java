@@ -5,12 +5,14 @@ import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.MethodOrderer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.Set;
 
 @Configuration
@@ -53,15 +55,16 @@ public class DBSeedConfig {
             userRepository.save(gendalf);
 
             log.info("Preloading Articles");
-            for (int i = 0; i < 12; i++) {
+            Random random = new Random();
+            for (int i = 1; i < 40; i++) {
                 Article article = new Article();
+                article.setTitle(String.format("Article №%d", i));
                 article.setExcerpt("Excerpt");
                 article.setContent("Content");
-                article.setImage(null);
+                article.setImage("/images/1.jpg");
                 article.setUser(gendalf);
                 article.setState(ArticleState.ENABLED);
-                article.setTitle(String.format("Article №%d", i));
-                article.setDateCreated(LocalDateTime.now());
+                article.setDateCreated(LocalDateTime.now().minusDays(random.nextInt(40)));
                 articleRepository.save(article);
             }
         };
