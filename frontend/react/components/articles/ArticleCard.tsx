@@ -17,11 +17,13 @@ const ArticleCard = ( { article }: { article: Article } ) => (
       />
     </div> */}
     <div className="relative overflow-hidden shadow-md pb-80">
-      <img src={article.image} alt="" className="object-top absolute h-80 w-full object-cover  shadow-lg rounded-t-lg lg:rounded-lg" />
+      <Link href={`/articles/${article.id}`}>
+        <img src={article.image} alt="" className="cursor-pointer object-top absolute h-80 w-full object-cover  shadow-lg rounded-t-lg lg:rounded-lg" />
+      </Link>
     </div>
 
     <h1 className="transition duration-700 text-center my-8 cursor-pointer hover:text-pink-600 text-3xl font-semibold">
-      <Link href={`/article/${article.id}`}>{article.title}</Link>
+      <Link href={`/articles/${article.id}`}>{article.title}</Link>
     </h1>
     <div className="block lg:flex text-center items-center justify-center w-full">
       <div className="flex items-center justify-center mb-4 lg:mb-0 w-full lg:w-auto mr-8 items-center">
@@ -46,7 +48,7 @@ const ArticleCard = ( { article }: { article: Article } ) => (
       {article.excerpt}
     </p>
     <div className="text-center">
-      <Link href={`/article/${article.id}`}>
+      <Link href={`/articles/${article.id}`}>
         <span className="transition duration-500 ease transform hover:-translate-y-1 inline-block bg-pink-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Continue Reading</span>
       </Link>
     </div>
