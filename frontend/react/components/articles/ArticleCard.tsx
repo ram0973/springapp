@@ -18,7 +18,8 @@ const ArticleCard = ( { article }: { article: Article } ) => (
     </div> */}
     <div className="relative overflow-hidden shadow-md pb-80">
       <Link href={`/articles/${article.id}`}>
-        <img src={article.image} alt="" className="cursor-pointer object-top absolute h-80 w-full object-cover  shadow-lg rounded-t-lg lg:rounded-lg" />
+        <img src={article.image} alt="" className="cursor-pointer object-top absolute h-80 w-full object-cover
+        shadow-lg rounded-t-lg lg:rounded-lg dark" />
       </Link>
     </div>
 

@@ -41,14 +41,15 @@ const LoginForm = () => {
         } else {
           setMessage(data.message);
         }
-      }
-      if (rememberMe) {
-        window.localStorage.setItem("user", JSON.stringify(data));
       } else {
-        window.sessionStorage.setItem("user", JSON.stringify(data));
+        if (rememberMe) {
+          window.localStorage.setItem("user", JSON.stringify(data));
+        } else {
+          window.sessionStorage.setItem("user", JSON.stringify(data));
+        }
+        await mutate("user", data.user);
+        await router.push("/");
       }
-      await mutate("user", data.user);
-      await router.push("/");
     } catch (error) {
       console.error(error);
     } finally {

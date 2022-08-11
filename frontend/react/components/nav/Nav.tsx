@@ -17,9 +17,6 @@ const Nav = () => {
               <Link key={index} href={`/category/${category.slug}`}><span className="md:float-right mt-2 align-middle text-white ml-4 font-semibold cursor-pointer">{category.name}</span></Link>
             ))}
           </div>
-          <Link href={`/auth/login`} className="">
-            <span className="transition duration-500 ease transform hover:-translate-y-1 inline-block bg-pink-600 text-lg font-medium rounded-full text-white px-8 py-3 cursor-pointer">Login</span>
-          </Link>
         </div>
       </nav>
   )
