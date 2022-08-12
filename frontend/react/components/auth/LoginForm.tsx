@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { EventHandler } from "react";
+import React, {EventHandler, useContext} from "react";
 import { mutate } from "swr";
 
 import UserAPI from "../../api/users";
@@ -36,7 +36,7 @@ const LoginForm = () => {
       );
       if (status !== 200) {
         if (data?.validationErrors) {
-          setErrors(data.validationErrors);
+          setErrors(data?.validationErrors);
           setMessage("");
         } else {
           setMessage(data.message);
@@ -47,6 +47,7 @@ const LoginForm = () => {
         } else {
           window.sessionStorage.setItem("user", JSON.stringify(data));
         }
+
         await mutate("user", data.user);
         await router.push("/");
       }
