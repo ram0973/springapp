@@ -57,8 +57,8 @@ cd springapp
 
 ## Настройки приложения
 
-Настройки лежат в src/main/resources/application.properties
-Если нужно сменить среду выполнения, нужно поменять в этом файле свойство spring.profiles.active на нужное
+Просто скопируйте настройки из src/main/resources/.env.dev.example в .env и настройте под себя.
+Если нужно сменить среду выполнения, нужно поменять в файле application.yml свойство spring.profiles.active на нужное
 
 ### Запуск приложения с помощью Docker compose:
 (Также можно пользовать командами из Makefile, например make up-dev)
