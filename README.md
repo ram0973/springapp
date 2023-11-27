@@ -1,4 +1,4 @@
-# Пример приложения REST API на Java 18 c использованием Spring Boot
+# Пример приложения REST API на Java 21 c использованием Spring Boot
 
 <h1 align="center"><img src="https://github.com/ram0973/springapp/blob/main/src/main/resources/spring-framework.png?raw=true" alt="Spring Application"></h1>
 

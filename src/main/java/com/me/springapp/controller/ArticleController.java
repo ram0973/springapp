@@ -11,15 +11,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 //TODO: check this
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @GetMapping("/articles")
     //@PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")

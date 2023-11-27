@@ -8,15 +8,18 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/auth")
 @Slf4j
-@RequiredArgsConstructor
 @RestController
 public class AuthController {
     private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("login")
     public ResponseEntity<AccessAndRefreshTokensResponseDTO> login(@RequestBody @Valid LoginRequestDTO request) {

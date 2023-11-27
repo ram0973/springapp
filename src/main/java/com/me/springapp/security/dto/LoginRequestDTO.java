@@ -2,10 +2,10 @@ package com.me.springapp.security.dto;
 
 import lombok.Builder;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record LoginRequestDTO(
     @NotBlank @NotNull @Email @Size(max = 50) String email,

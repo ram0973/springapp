@@ -5,7 +5,6 @@ import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.MethodOrderer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +16,12 @@ import java.util.Set;
 
 @Configuration
 @Slf4j
-@RequiredArgsConstructor
 public class DBSeedConfig {
     private final PasswordEncoder passwordEncoder;
+
+    public DBSeedConfig(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository,

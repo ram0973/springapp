@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-openjdk-debian:18.0.1-12 AS base
+FROM openjdk:21 AS base
 WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./

@@ -9,7 +9,7 @@ import com.me.springapp.security.model.JwtAuthentication;
 import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public interface AuthService {
     AccessAndRefreshTokensResponseDTO login(LoginRequestDTO authRequest);
