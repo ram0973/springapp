@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,8 +29,9 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.List;
 import java.util.Locale;
 
+// https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     @Autowired
@@ -113,20 +115,28 @@ public class SecurityConfig {
 //        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         //.loginPage("/")
         //.changePasswordPage("/update-password")
-        http.authorizeHttpRequests(authorize -> authorize
-                //.requestMatchers("/blog/**").permitAll()
-                .anyRequest().permitAll()
-                //.anyRequest().authenticated()
-            )
+        http.exceptionHandling(exception -> exception
+            .authenticationEntryPoint(userAuthenticationEntryPoint)
+
+        );
+        http.authorizeHttpRequests(authorize ->
+                    authorize
+                    .requestMatchers("/blog/**").permitAll()
+                    .requestMatchers("/", "/api/auth/login", "/api/auth/token").permitAll()
+                    .requestMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .anyRequest().permitAll()
+                    //.anyRequest().authenticated()
+                 )
+
             .formLogin(AbstractHttpConfigurer::disable)
             .passwordManagement(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable);
             //.cors().disable();
-            //.mvcMatchers("/", "/api/auth/login", "/api/auth/token").permitAll()
-            //.mvcMatchers( "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+
         // authenticated();
 
-        //http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
