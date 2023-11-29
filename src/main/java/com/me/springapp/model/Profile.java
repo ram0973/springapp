@@ -1,14 +1,13 @@
 package com.me.springapp.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @SuperBuilder

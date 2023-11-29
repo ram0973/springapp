@@ -1,3 +1,20 @@
 spring:
   profiles:
     active: dev
+  redis:
+    host: localhost
+    port: 6379
+  session:
+    store-type: redis
+server:
+  servlet:
+    session:
+      cookie:
+        name: JSESSIONID
+        path: /
+        http-only: false
+        domain: localhost
+        secure: true
+        # https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence
+        max-age: P365D
+        same-site: Strict

@@ -73,17 +73,16 @@ spring:
     username: smtp-server-user
   #main:
   #  allow-circular-references: true
+  redis:
+    host: localhost
+    port: 6379
   security:
     user:
       name: user@acme.com
       password: password
       roles: USER
-
-jwt:
-  secret:
-    access: supermegasecret
-    refresh: supermegarefreshsecret
-
+  session:
+    store-type: redis
 #springfox:
 #  documentation:
 #    auto-startup: true

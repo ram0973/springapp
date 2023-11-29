@@ -1,24 +1,13 @@
 package com.me.springapp.security.service;
 
-
-import com.me.springapp.security.dto.AccessTokenResponseDTO;
 import com.me.springapp.security.dto.LoginRequestDTO;
 import com.me.springapp.security.dto.SignupRequestDTO;
-import com.me.springapp.security.dto.AccessAndRefreshTokensResponseDTO;
-import com.me.springapp.security.model.JwtAuthentication;
-import lombok.NonNull;
-import org.springframework.http.ResponseEntity;
-
-import jakarta.validation.constraints.NotBlank;
+import org.springframework.security.core.Authentication;
 
 public interface AuthService {
-    AccessAndRefreshTokensResponseDTO login(LoginRequestDTO authRequest);
+    void login(LoginRequestDTO authRequest);
 
-    AccessAndRefreshTokensResponseDTO signup(SignupRequestDTO signUpRequestDTO);
+    void signup(SignupRequestDTO signUpRequestDTO);
 
-    AccessTokenResponseDTO getAccessToken(@NonNull @NotBlank String refreshToken);
-
-    AccessAndRefreshTokensResponseDTO refresh(@NonNull @NotBlank String refreshToken);
-
-    JwtAuthentication getAuthInfo();
+    Authentication getAuthInfo();
 }

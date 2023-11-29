@@ -3,7 +3,6 @@ package com.me.springapp.configuration;
 import com.me.springapp.model.*;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Configuration
 @Slf4j
@@ -24,8 +23,7 @@ public class DBSeedConfig {
     }
 
     @Bean
-    CommandLineRunner initDatabase(UserRepository userRepository,
-                                   ArticleRepository articleRepository) {
+    CommandLineRunner initDatabase(UserRepository userRepository, ArticleRepository articleRepository) {
         return args -> {
             log.info("Preloading Users");
 
@@ -57,7 +55,7 @@ public class DBSeedConfig {
             userRepository.save(gendalf);
 
             log.info("Preloading Articles");
-            Random random = new Random();
+            ThreadLocalRandom random = ThreadLocalRandom.current();
             for (int i = 1; i < 40; i++) {
                 Article article = new Article();
                 article.setTitle(String.format("Article №%d", i));

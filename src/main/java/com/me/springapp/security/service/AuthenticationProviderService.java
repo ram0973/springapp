@@ -5,7 +5,6 @@ import com.me.springapp.model.User;
 import com.me.springapp.security.userdetails.UserDetailsImpl;
 import com.me.springapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class AuthenticationProviderService implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-
 
     private @NotNull Authentication checkPassword(@NotNull UserDetailsImpl user,
                                                   String rawPassword,

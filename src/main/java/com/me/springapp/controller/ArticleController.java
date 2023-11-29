@@ -6,23 +6,18 @@ import com.me.springapp.exceptions.NoSuchEntityException;
 import com.me.springapp.model.Article;
 import com.me.springapp.model.ArticleState;
 import com.me.springapp.service.ArticleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
-//TODO: check this
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*") //TODO: check this
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
-
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
-    }
 
     @GetMapping("/articles")
     //@PreAuthorize("hasRole('MOD') or hasRole('ADMIN')")

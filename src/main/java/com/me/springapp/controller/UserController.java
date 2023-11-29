@@ -5,27 +5,24 @@ import com.me.springapp.dto.UserDTO;
 import com.me.springapp.exceptions.EmailAlreadyInUseException;
 import com.me.springapp.exceptions.EntityPersistException;
 import com.me.springapp.exceptions.NoSuchEntityException;
-import com.me.springapp.model.UserState;
 import com.me.springapp.model.User;
+import com.me.springapp.model.UserState;
 import com.me.springapp.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.Optional;
 
 //@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/users")
     //@PreAuthorize("hasRole('ADMIN')")

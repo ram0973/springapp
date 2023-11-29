@@ -2,9 +2,9 @@ package com.me.springapp.service;
 
 import com.me.springapp.dto.PagedUsersDTO;
 import com.me.springapp.dto.UserDTO;
-import com.me.springapp.model.UserState;
 import com.me.springapp.model.Role;
 import com.me.springapp.model.User;
+import com.me.springapp.model.UserState;
 
 import java.util.Optional;
 

@@ -10,6 +10,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
@@ -18,8 +21,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class User extends BaseModel {
+public class User extends BaseModel implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2405172041950251807L;
 
     @NotBlank
@@ -44,12 +48,10 @@ public class User extends BaseModel {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @Getter
     @Enumerated(EnumType.STRING)
 
     @Setter
     private UserState state;
 
-    public UserState getState() {
-        return state;
-    }
 }

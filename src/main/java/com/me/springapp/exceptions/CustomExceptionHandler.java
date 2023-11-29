@@ -56,14 +56,6 @@ public class CustomExceptionHandler {
         return new ApiError(req, e, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(InvalidJWTException.class)
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    @ResponseBody
-    protected ApiError handleInvalidJWTException(HttpServletRequest req, @NotNull Exception e) {
-        log.error(e.getLocalizedMessage());
-        return new ApiError(req, e, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ResponseBody

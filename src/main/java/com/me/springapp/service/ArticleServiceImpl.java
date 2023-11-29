@@ -7,6 +7,7 @@ import com.me.springapp.exceptions.NoSuchEntityException;
 import com.me.springapp.model.Article;
 import com.me.springapp.model.ArticleState;
 import com.me.springapp.repository.ArticleRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
