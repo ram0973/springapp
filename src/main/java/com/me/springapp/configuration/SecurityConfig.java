@@ -13,6 +13,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
@@ -39,12 +40,10 @@ import java.util.Locale;
 
 // https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html
 @Configuration
-//@EnableWebSecurity
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationProvider authenticationProvider;
-    private final DataSource dataSource;
     private final UserDetailsService userDetailsService;
     static final String PROJECT_LANGUAGE = "ru"; //TODO move to ini
     static final String[] ALLOWED_ORIGINS = {"http://localhost:8080"}; //TODO move to ini
@@ -67,48 +66,19 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
 //    @Bean
 //    public AuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsService) {
 //        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(passwordEncoder());
 //        provider.setUserDetailsService(userDetailsService);
 //        return provider;
 //    }
-//
-//    @Bean
-//    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
-//                                                       PasswordEncoder passwordEncoder) {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userDetailsService);
-//        authenticationProvider.setPasswordEncoder(passwordEncoder);
-//        return new ProviderManager(authenticationProvider);
-//    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(ALLOWED_ORIGINS));
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
-
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
-        jdbcTokenRepository.setDataSource(dataSource);
-        return jdbcTokenRepository;
-    }
 
     @Bean
     protected SecurityFilterChain filterChain(@NotNull HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers("/blog/**").permitAll()
-                    .requestMatchers("/", "/api/auth/login", "/api/auth/token").permitAll()
+                    .requestMatchers("/", "/api/auth/login").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                     .anyRequest().permitAll()
                 //.anyRequest().authenticated()
@@ -118,12 +88,6 @@ public class SecurityConfig {
             // check paths
             .csrf(AbstractHttpConfigurer::disable // TODO remove after testing
                 //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-            )
-
-            .rememberMe(rememberMe -> rememberMe
-                .userDetailsService(userDetailsService)
-                .key("1234567890") // TODO Change key
-                .tokenRepository(persistentTokenRepository())
             )
 
             .formLogin(AbstractHttpConfigurer::disable)
