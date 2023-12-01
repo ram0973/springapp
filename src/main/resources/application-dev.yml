@@ -40,6 +40,9 @@ spring:
       #  https://docs.spring.io/spring-data/rest/docs/current/reference/html/#getting-started.basic-settings
       basePath: /api
       returnBodyOnCreate: true
+    redis:
+      host: localhost
+      port: 6379
   devtools:
     add-properties: true
     restart:
@@ -52,7 +55,6 @@ spring:
   #      is-getter: none
   jpa:
     database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     generate-ddl: true
     hibernate:
       ddl-auto: create
@@ -67,15 +69,13 @@ spring:
           # https://stackoverflow.com/questions/21257819/what-is-the-difference-between-hibernate-jdbc-fetch-size-and-hibernate-jdbc-batc
           batch_size: 10
     show-sql: true
+    # database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
     host: smtp.foo.com
     password: smtp-server-password
     username: smtp-server-user
   #main:
   #  allow-circular-references: true
-  redis:
-    host: localhost
-    port: 6379
   security:
     user:
       name: user@acme.com
