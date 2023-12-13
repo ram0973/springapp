@@ -28,7 +28,6 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     private Optional<PagedUsersDTO> getPagedUsersDTOResponseEntity(@NotNull Page<User> pagedUsers) {

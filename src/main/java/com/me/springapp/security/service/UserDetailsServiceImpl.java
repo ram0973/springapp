@@ -2,6 +2,7 @@ package com.me.springapp.security.service;
 
 import com.me.springapp.model.User;
 import com.me.springapp.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional

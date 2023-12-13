@@ -3,6 +3,7 @@ package com.me.springapp.configuration;
 import com.me.springapp.model.*;
 import com.me.springapp.repository.ArticleRepository;
 import com.me.springapp.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -15,12 +16,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Configuration
 @Slf4j
+@RequiredArgsConstructor
 public class DBSeedConfig {
     private final PasswordEncoder passwordEncoder;
-
-    public DBSeedConfig(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository, ArticleRepository articleRepository) {
